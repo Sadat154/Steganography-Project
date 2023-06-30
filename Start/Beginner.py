@@ -1,62 +1,62 @@
 from PIL import Image
 
-
-def encode_message(image_path, message):
+def hide_message(image_path, message):
     image = Image.open(image_path)
     width, height = image.size
-    max_chars = width * height * 3 // 8  # Maximum number of characters that can be encoded
-    if len(message) > max_chars:
-        raise ValueError("Message is too long to be encoded in the image.")
+    pixel_map = image.load()
 
-    binary_message = ''.join(format(ord(c), '08b') for c in message)  # Convert message to binary
+    binary_message = ''.join(format(ord(char), '08b') for char in message)
 
-    encoded_image = image.copy()
-    index = 0  # Index for traversing the binary message
+    if len(binary_message) > width * height:
+        raise ValueError("Message is too long to be hidden in the image.")
 
-    # Iterate through each pixel and modify the least significant bit of each color channel
+    bit_index = 0
+
     for y in range(height):
         for x in range(width):
-            pixel = list(image.getpixel((x, y)))
-            if index < len(binary_message):
-                for i in range(3):
-                    pixel[i] = pixel[i] & 0xFE | int(binary_message[index])
-                    index += 1
-            else:
-                break
-            encoded_image.putpixel((x, y), tuple(pixel))
+            r, g, b = pixel_map[x, y]
 
-    encoded_image.save("encoded_image.png")  # Save the encoded image
+            if bit_index < len(binary_message):
+                r = (r & 0xFE) | int(binary_message[bit_index])
+                bit_index += 1
 
+            pixel_map[x, y] = (r, g, b)
 
-def decode_message(image_path):
-    encoded_image = Image.open(image_path)
-    width, height = encoded_image.size
+    output_image_path = 'stego_image.png'
+    image.save(output_image_path)
+    print("Message hidden successfully in the image.")
 
-    binary_message = ""
+def extract_message(image_path):
+    image = Image.open(image_path)
+    width, height = image.size
+    pixel_map = image.load()
 
-    # Iterate through each pixel and retrieve the least significant bit of each color channel
+    extracted_message = []
+    bit_index = 0
+    binary_message = ''
+
     for y in range(height):
         for x in range(width):
-            pixel = list(encoded_image.getpixel((x, y)))
-            for i in range(3):
-                binary_message += str(pixel[i] & 1)
+            r, _, _ = pixel_map[x, y]
+            binary_message += str(r & 0x01)
+            bit_index += 1
 
-    decoded_message = ""
+            if bit_index % 8 == 0:
+                extracted_message.append(binary_message)
+                binary_message = ''
 
-    # Convert binary message to ASCII characters
-    for i in range(0, len(binary_message), 8):
-        decoded_message += chr(int(binary_message[i:i + 8], 2))
+    message = ''.join(chr(int(binary, 2)) for binary in extracted_message)
 
-    return decoded_message
+    return message
 
 
 # Example usage:
-image_path = "cover_image.png"
-message_to_encode = "This is a secret message!"
+image_path = 'Zilla.jpeg'
+message = "The person reading this is homosexual"
 
-# Encode the message in the image
-encode_message(image_path, message_to_encode)
+# Hide the message in the image
+# hide_message(image_path, message)
 
-# Decode the message from the encoded image
-decoded_message = decode_message("encoded_image.png")
-print("Decoded message:", decoded_message)
+# Extract the hidden message from the stego image
+extracted_message = extract_message('stego_image.png')
+# print("Extracted Message:", extracted_message)
