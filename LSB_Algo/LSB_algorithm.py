@@ -1,4 +1,7 @@
 from PIL import Image
+import numpy as np
+
+
 
 def hide_message(image_path, message, output_path):
     image = Image.open(image_path)
@@ -64,21 +67,41 @@ def extract_message(image_path):
     return None
 
 
+def show_image_difference(original_path, stego_path):
+    # Load the original and stego images
+    original_image = Image.open(original_path)
+    stego_image = Image.open(stego_path)
+
+    # Convert images to numpy arrays
+    original_array = np.array(original_image)
+    stego_array = np.array(stego_image)
+
+    # Calculate the absolute difference between the images
+    diff = np.abs(original_array - stego_array)
+
+    # Create a PIL image from the difference array
+    diff_image = Image.fromarray(diff.astype(np.uint8))
+
+    # Display the difference image
+
+    output_path = "N:/Github/Steganography-Project/LSB_Algo/LSB_images/exd.png"
+    diff_image.save(output_path)
 
 # Hide a message in an image
 
 def generate_stego_images():
 
     initial_image = "N://Github//Steganography-Project//Kung_fu_panda.png"
-    for i in range(0,1000000,100000):
-        output_image = f"output_img_{i}.png"
-        message = 'a'*i
-        hide_message(initial_image, message, output_image)
+
+    output_image = f"output_img_1000000.png"
+    message = 'a'*1000000
+    hide_message(initial_image, message, output_image)
 
     print("Image generation for the LSB algo completed")
 
 generate_stego_images()
 
+show_image_difference("N://Github//Steganography-Project//Kung_fu_panda.png","N:/Github/Steganography-Project/LSB_Algo/LSB_images/output_img_100000.png")
 
 # message = extract_message("N:\Github\Steganography-Project\LSB_Algo\LSB_images\output_img_81000.png")
 # print(message)
