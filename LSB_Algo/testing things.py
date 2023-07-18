@@ -1,3 +1,3 @@
 a = 'a'*6
 
-print(a)
+print(35 & 0xFE)
