@@ -39,7 +39,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
 }</component>
-  <component name="RunManager" selected="Python.LSB_algorithm (1)">
+  <component name="RunManager" selected="Python.LSB_algorithm">
     <configuration name="DCT_algorithm (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Steganography-Project" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -152,9 +152,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.LSB_algorithm (1)" />
-        <item itemvalue="Python.testing things (1)" />
         <item itemvalue="Python.LSB_algorithm" />
+        <item itemvalue="Python.testing things (1)" />
+        <item itemvalue="Python.LSB_algorithm (1)" />
         <item itemvalue="Python.DCT_algorithm (1)" />
         <item itemvalue="Python.DCT_algorithm" />
       </list>
@@ -189,15 +189,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Steganography_Project$testing_things__1_.coverage" NAME="testing things (1) Coverage Results" MODIFIED="1689666865921" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/LSB_Algo" />
-    <SUITE FILE_PATH="coverage/Steganography_Project$Beginner__1_.coverage" NAME="Beginner (1) Coverage Results" MODIFIED="1689238375260" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/LSB_Algo" />
-    <SUITE FILE_PATH="coverage/Steganography_Project$DCT_algorithm.coverage" NAME="DCT_algorithm Coverage Results" MODIFIED="1689239247557" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/LSB_Algo" />
-    <SUITE FILE_PATH="coverage/Steganography_Project$DCT_algorithm__1_.coverage" NAME="DCT_algorithm (1) Coverage Results" MODIFIED="1689322513301" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DCT_Algo" />
-    <SUITE FILE_PATH="coverage/Steganography_Project$Beginner.coverage" NAME="Beginner Coverage Results" MODIFIED="1689166533492" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Start/LSB_Algo" />
-    <SUITE FILE_PATH="coverage/Steganography_Project$testing_things.coverage" NAME="testing things Coverage Results" MODIFIED="1689166672747" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Start/LSB_Algo" />
-    <SUITE FILE_PATH="coverage/Steganography_Project$LSB_algorithm__1_.coverage" NAME="LSB_algorithm (1) Coverage Results" MODIFIED="1689668803501" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/LSB_Algo" />
-    <SUITE FILE_PATH="coverage/Steganography_Project$LSB_algorithm.coverage" NAME="LSB_algorithm Coverage Results" MODIFIED="1689323589255" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/LSB_Algo" />
   </component>
 </project>

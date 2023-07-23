@@ -37,7 +37,29 @@ def hide_message(original_path, message, output_path):
     image.save(output_path)
 
 
+def show_lsb(image_path):
+    image = Image.open(image_path).convert('RGB')
+    width, height = image.size
 
+    # Create a new image with a white background
+    lsb_image = Image.new('RGB', (width, height), (255, 255, 255))
+
+    # Iterate through each pixel and extract the LSB
+    for y in range(height):
+        for x in range(width):
+            pixel = image.getpixel((x, y))
+
+            # Extract the LSB from each color channel
+            lsb_r = pixel[0] & 1
+            lsb_g = pixel[1] & 1
+            lsb_b = pixel[2] & 1
+
+            # Set the pixel to black if the LSB is 0 (non-white)
+            if lsb_r == 0 or lsb_g == 0 or lsb_b == 0:
+                lsb_image.putpixel((x, y), (0, 0, 0))
+
+    # Show the LSB image
+    lsb_image.show()
 def extract_message(image_path):
     image = Image.open(image_path)
     width, height = image.size
@@ -45,22 +67,53 @@ def extract_message(image_path):
     binary_message = ''
     delimiter = '11111111'
 
-    print(image.getpixel((1,1)))
+    for y in range(height):
+        for x in range(width):
+            pixel = image.getpixel((x,y))
+
+            for channel in range(3):
+                binary_message += str(pixel[channel] & 1)
+
+            if binary_message[-8:] == delimiter:
+                binary_message = binary_message[:-8]
+                message = ''
+                for i in range(0,len(binary_message),8):
+                    byte = binary_message[i:i+8]
+                    message += chr(int(byte, 2))
+                return message
 
 
-# original_path = "C:/Users/Nafis/Documents/GitHub/Steganography-Project/Kung_fu_panda.png"
-# output_path = "C:/Users/Nafis/Documents/GitHub/Steganography-Project/LSB_Algo/LSB_images/output_img_testing.png"
 
-original_path = "N:/Github/Steganography-Project/Kung_fu_panda.png"
-output_path = "N:/Github/Steganography-Project/LSB_Algo/LSB_images/hidden.png"
+def differences_in_images(original_path, stego_path):
+    stego_image = Image.open(stego_path)
+    width_stego, height_stego = stego_image.size
+
+    original_image = Image.open(original_path)
+    width_original, height_original = original_image.size
+
+
+    for y in range(height_original):
+        for x in range(width_original):
+            pass
+
+
+def generate_images():
+    pass
+
+
+original_path = "C:/Users/Nafis/Documents/GitHub/Steganography-Project/Kung_fu_panda.png"
+output_path = "C:/Users/Nafis/Documents/GitHub/Steganography-Project/LSB_Algo/LSB_images/hidden.png"
+
+# original_path = "N:/Github/Steganography-Project/Kung_fu_panda.png"
+# output_path = "N:/Github/Steganography-Project/LSB_Algo/LSB_images/hidden.png"
 
 message = "Ligma balls"
 
 
 # hide_message(original_path,message,output_path)
-extract_message(output_path)
+# print(extract_message(output_path))
 
-
+show_lsb(output_path)
 
 
 
