@@ -30,7 +30,7 @@ def encode_lsb(original_image_path, secret_message, output_image_path):
             original_image.putpixel((x, y), tuple(pixel))
 
     # Save the encoded image
-    original_image.save(output_image_path + ".jpg")
+    original_image.save(output_image_path)
 
 def decode_lsb(encoded_image_path):
     # Open the encoded image
@@ -52,14 +52,14 @@ def decode_lsb(encoded_image_path):
     return decoded_message
 
 # Example usage:
-original_image_path = 'C:/Users/naf15/Downloads/12x12.jpg'
-secret_message = 'Hello, this is a secret message!'
-output_image_path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/Bit-8/helpMe'
+
+original_image_path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/cropped.jpg'
+secret_message = 'ILoveCS'
+output_image_path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/Bit-8/Testing.png'
 
 # Encode the message
 encode_lsb(original_image_path, secret_message, output_image_path)
 
-
 # Decode the message
-decoded_message = decode_lsb(output_image_path+".JPG")
+decoded_message = decode_lsb(output_image_path)
 print("Decoded Message:", decoded_message)
