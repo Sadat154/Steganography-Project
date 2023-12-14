@@ -7,7 +7,7 @@ def message_to_bin(message):
 def encode_lsb(original_image_path, secret_message, output_image_path):
     # Open the original image
     original_image = Image.open(original_image_path)
-
+    secret_message += Delim
     # Convert the secret message to binary
     binary_message = message_to_bin(secret_message)
 
@@ -38,20 +38,40 @@ def decode_lsb(encoded_image_path):
 
     # Extract the hidden message from the image
     binary_message = ''
-    for y in range(encoded_image.size[1]):
-        for x in range(encoded_image.size[0]):
-            pixel = list(encoded_image.getpixel((x, y)))
+    message_length = 0
+    decoded_message = ''
 
-            # Extract the least significant bit from each RGB component
-            for i in range(3):
-                binary_message += str(pixel[i] & 1)
+    while decoded_message[:-(len(Delim))] != Delim:
+        for y in range(encoded_image.size[1]):
+            for x in range(encoded_image.size[0]):
+                pixel = list(encoded_image.getpixel((x, y)))
 
-    # Convert binary message to string
-    decoded_message = ''.join([chr(int(binary_message[i:i+8], 2)) for i in range(0, len(binary_message), 8)])
+                # Extract the least significant bit from each RGB component
+                for i in range(3):
+                    binary_message += str(pixel[i] & 1)
+                    message_length += 1
+
+                if len(binary_message) % 8 == 0:
+                    decoded_message += ''.join([chr(int(binary_message[i:i+8], 2)) for i in range(0, len(binary_message), 8)])
+                    print(decoded_message)
+                #Continue
+            break
+        break
+
+        # Ensure that the extracted message is a multiple of 8 (one character)
+        remaining_bits = message_length % 8
+        if remaining_bits != 0:
+            # Remove the extra bits to align to the nearest byte boundary
+            binary_message = binary_message[:-remaining_bits]
+
+        # Convert binary message to string
 
     return decoded_message
 
+
 # Example usage:
+
+Delim = 'GZOHLUMXWRDTCQF'
 
 original_image_path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/cropped.jpg'
 secret_message = 'ILoveCS'
