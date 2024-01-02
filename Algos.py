@@ -1,3 +1,6 @@
+import time
+#LSB DONE
+
 from PIL import Image
 
 def message_to_bin(message):
@@ -41,7 +44,7 @@ def decode_lsb(encoded_image_path):
     message_length = 0
     decoded_message = ''
 
-    while decoded_message[:-(len(Delim))] != Delim:
+    while decoded_message[-(len(Delim)):] != Delim:
         for y in range(encoded_image.size[1]):
             for x in range(encoded_image.size[0]):
                 pixel = list(encoded_image.getpixel((x, y)))
@@ -49,24 +52,29 @@ def decode_lsb(encoded_image_path):
                 # Extract the least significant bit from each RGB component
                 for i in range(3):
                     binary_message += str(pixel[i] & 1)
+                    decoded_message = ''.join(
+                        [chr(int(binary_message[i:i + 8], 2)) for i in range(0, len(binary_message), 8)])
+                    if Delim in decoded_message:
+                        break
                     message_length += 1
 
-                if len(binary_message) % 8 == 0:
-                    decoded_message += ''.join([chr(int(binary_message[i:i+8], 2)) for i in range(0, len(binary_message), 8)])
-                    print(decoded_message)
-                #Continue
-            break
-        break
+            if Delim in decoded_message:
+                break
 
-        # Ensure that the extracted message is a multiple of 8 (one character)
+        if Delim in decoded_message:
+            break
+
+
+
+        #Ensure that the extracted message is a multiple of 8 (one character)
         remaining_bits = message_length % 8
         if remaining_bits != 0:
             # Remove the extra bits to align to the nearest byte boundary
             binary_message = binary_message[:-remaining_bits]
 
-        # Convert binary message to string
+        #Convert binary message to string
 
-    return decoded_message
+    return decoded_message[:-(len(Delim)+1)]
 
 
 # Example usage:
@@ -74,12 +82,14 @@ def decode_lsb(encoded_image_path):
 Delim = 'GZOHLUMXWRDTCQF'
 
 original_image_path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/cropped.jpg'
-secret_message = 'ILoveCS'
+secret_message = 'ILOVECSP'
 output_image_path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/Bit-8/Testing.png'
 
 # Encode the message
 encode_lsb(original_image_path, secret_message, output_image_path)
 
 # Decode the message
+print("TEST")
 decoded_message = decode_lsb(output_image_path)
+print("T")
 print("Decoded Message:", decoded_message)
