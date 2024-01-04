@@ -7,7 +7,7 @@ def message_to_bin(message):
     binary_message = ''.join(format(ord(char), '08b') for char in message)
     return binary_message
 
-def encode_lsb(original_image_path, secret_message, output_image_path, bit_position=0):
+def encode_bit(original_image_path, secret_message, output_image_path, bit_position=0):
     # Open the original image
     original_image = Image.open(original_image_path)
     secret_message += Delim
@@ -35,7 +35,7 @@ def encode_lsb(original_image_path, secret_message, output_image_path, bit_posit
     # Save the encoded image
     original_image.save(output_image_path)
 
-def decode_lsb(encoded_image_path, bit_position=0):
+def decode_bit(encoded_image_path, bit_position=0):
     # Open the encoded image
     encoded_image = Image.open(encoded_image_path)
 
@@ -92,10 +92,10 @@ bit_position_to_encode = 0 # 0 = LSB, 7 = MSB
 
 
 # Encode the message
-encode_lsb(original_image_path, secret_message, output_image_path, bit_position_to_encode)
+encode_bit(original_image_path, secret_message, output_image_path, bit_position_to_encode)
 
 # Decode the message
 
-decoded_message = decode_lsb(output_image_path, bit_position_to_encode)
+decoded_message = decode_bit(output_image_path, bit_position_to_encode)
 
 print("Decoded Message:", decoded_message)

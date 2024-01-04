@@ -5,13 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8acbc404-3ff0-4210-ab49-827a4d1d4fc1" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/TransformDCT.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/Steganography-Project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Steganography-Project.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Algos.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bit-8/Testing.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RandomTest.py" beforeDir="false" afterPath="$PROJECT_DIR$/RandomTest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cropped.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/cropped.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BitSubstitution.py" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubstitution.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SpreadSpectrum.py" beforeDir="false" afterPath="$PROJECT_DIR$/SpreadSpectrum.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
