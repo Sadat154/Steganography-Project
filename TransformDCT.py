@@ -12,14 +12,15 @@ class DCTSteganography:
         return binary_message
 
     def _block_dct(self, block):
-        return np.round(np.dot(np.dot(self.transpose_matrix, block), self.dct_matrix) / 2)
+        return np.round(np.dot(np.dot(self.transpose_matrix, block), self.dct_matrix) / 2).astype(int)
 
     def _block_idct(self, block):
-        return np.round(np.dot(np.dot(self.dct_matrix.T, block), self.transpose_matrix.T) / 2)
+        return np.round(np.dot(np.dot(self.dct_matrix.T, block), self.transpose_matrix.T) / 2).astype(int)
 
     def _encode_block(self, block, bit):
         # Modify the last coefficient of the block to encode one bit
-        block[-1, -1] = math.floor(block[-1, -1] / 2) * 2 + int(bit)
+        block[-1, -1] = np.floor(block[-1, -1] / 2) * 2 + int(bit)
+        return block
 
     def _decode_block(self, block):
         # Retrieve the last bit from the last coefficient of the block
@@ -32,7 +33,7 @@ class DCTSteganography:
 
         for y in range(0, height, block_size):
             for x in range(0, width, block_size):
-                block = np.array(image.crop((x, y, x + block_size, y + block_size)))
+                block = np.array(image.crop((x, y, x + block_size, y + block_size)), dtype=float)
                 processed_block = process_function(block, next(bitstream))
                 image.paste(Image.fromarray(processed_block.astype(np.uint8)), (x, y))
 
@@ -50,8 +51,7 @@ class DCTSteganography:
                 self.dct_matrix[i, j] = math.cos((2 * i + 1) * j * math.pi / 16)
                 self.transpose_matrix[i, j] = self.dct_matrix[j, i]
 
-        encoded_image = self._process_image(self._encode_block, bitstream)
-        encoded_image.save(output_image_path)
+        self._process_image(self._encode_block, bitstream).save(output_image_path)
 
     def decode_dct(self):
         bitstream = ''
@@ -69,11 +69,10 @@ class DCTSteganography:
         decoded_message = ''.join([chr(int(bitstream[i:i + 8], 2)) for i in range(0, len(bitstream), 8)])
         return decoded_message
 
-
 # Example usage:
-original_image_path = 'path/to/original/image.jpg'
-secret_message = 'Hello, this is a DCT steganography example!'
-output_image_path = 'path/to/output/encoded_image_dct.png'
+original_image_path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/cropped.jpg'
+secret_message = 'abc'
+output_image_path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/SpreadSpecResults/SpreadSpec2.png'
 
 # Create an instance of the DCTSteganography class
 dct_steganography = DCTSteganography(original_image_path)
