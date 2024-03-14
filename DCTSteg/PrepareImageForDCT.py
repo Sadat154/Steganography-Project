@@ -1,5 +1,4 @@
 from PIL import Image
-import matplotlib.pyplot as plt
 from scipy.misc import face
 import cv2
 import numpy as np
