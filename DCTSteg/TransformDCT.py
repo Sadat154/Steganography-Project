@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-
+from PIL import Image
 DELIMITER = ''
 class DCTSteg:
     def __init__(self, image_path):

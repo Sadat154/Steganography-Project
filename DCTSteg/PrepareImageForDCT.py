@@ -7,7 +7,7 @@ class DCTSteg:
         self.original_image = Image.open(image_path)
         self.height = self.original_image.size[1]
         self.width = self.original_image.size[0]
-        self.channels = 3 if self.original_image.mode == 'RGB' else 4
+        self.channels = 3 if self.original_image.mode == 'RGB' else 4 #Redundant, should be 3, if 4 then tell them to choose another image
 
 
 
@@ -25,6 +25,17 @@ class DCTSteg:
         if((width/8)*(height/8)<len(message)):
             print("Error: Message too large to encode in image")
             return False
+
+
+    def split_into_RGB(self,x,y):
+        pixel = list(self.original_image.getpixel((x, y)))
+        rPix = pixel[0]
+        gPix = pixel[1]
+        bPix = pixel[2]
+        #Need to make changes to the blue channel as human eye less likely to perceive changes made in blue channel
+        return rPix,gPix,bPix
+
+
 
 
 path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/cropped.jpg'

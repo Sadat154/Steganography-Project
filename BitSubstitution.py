@@ -2,11 +2,11 @@ from PIL import Image
 
 Delim = '%$£QXT'
 class BitEncoderDecoder:
-    def __init__(self, original_image_path, encoded_image_path, bit_position=0):
+    def __init__(self, original_image_path, encoded_image_path, bit_position, channel_count):
         self.original_image = Image.open(original_image_path)
         self.encoded_image_path = encoded_image_path #Where the encoded image shall be stored
         self.bit_position = bit_position
-        self.number_of_channels = 3 if self.original_image.mode == 'RGB' else 4
+        self.number_of_channels = channel_count #Do a separate check for channel_counts, only allow images that are RGB
 
 
     def _message_to_bin(self, message):
@@ -73,14 +73,30 @@ class BitEncoderDecoder:
 
 
 # Example usage:
-original_image_path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/cropped.jpg'
-secret_message = 'abcDEF'
-output_image_path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/BitSubResults/BitSub3.png'
-bit_position_to_encode = 3  # 0 = LSB, 7 = MSB
+# original_image_path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/cropped.jpg'
+# secret_message = 'abcDEF'
+# output_image_path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/BitSubResults/BitSub3.png'
+# bit_position_to_encode = 3  # 0 = LSB, 7 = MSB
+#
+# bit_encoder_decoder = BitEncoderDecoder(original_image_path, output_image_path, bit_position_to_encode) #Object
+# bit_encoder_decoder.encode_bit(secret_message) #Object has been encoded
+#
+# decoded_message = bit_encoder_decoder.decode_bit() #Decode the object
+#
+# print("Decoded Message:", decoded_message)
 
-bit_encoder_decoder = BitEncoderDecoder(original_image_path, output_image_path, bit_position_to_encode) #Object
-bit_encoder_decoder.encode_bit(secret_message) #Object has been encoded
 
-decoded_message = bit_encoder_decoder.decode_bit() #Decode the object
 
-print("Decoded Message:", decoded_message)
+def generate_lsb_images(original_image):
+
+    for i in range(0,8): #Bit
+        #Need to obtain maximum amount of characters available to be embedded into the image
+        max_chars = 3 * original_image.size[0] * original_image.size[1]
+        #For each bit, 4 images need to be produced
+        for i in range(4):
+            percentage = i/4
+            chars_to_be_embedded = ['a'] * percentage * max_chars
+
+
+     # 25%,50%,75%,100% - bit 1-8 so 4*8 = 32 images for one image. Ideal 3 images.
+
