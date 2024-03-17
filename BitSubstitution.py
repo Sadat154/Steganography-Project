@@ -1,3 +1,5 @@
+import math
+
 from PIL import Image
 
 Delim = '%$£QXT'
@@ -33,7 +35,7 @@ class BitEncoderDecoder:
 
                 original_image.putpixel((x, y), tuple(pixel))
 
-        original_image.save(output_image_path)
+        original_image.save(self.encoded_image_path)
 
     def decode_bit(self):
         encoded_image = Image.open(self.encoded_image_path)
@@ -73,9 +75,9 @@ class BitEncoderDecoder:
 
 
 # Example usage:
-# original_image_path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/cropped.jpg'
+original_image_path = 'C:/Users/naf15/OneDrive/Desktop/StegProject/Steganography-Project/cropped.jpg'
 # secret_message = 'abcDEF'
-# output_image_path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/BitSubResults/BitSub3.png'
+#output_image_path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/BitSubResults/BitSub3.png'
 # bit_position_to_encode = 3  # 0 = LSB, 7 = MSB
 #
 # bit_encoder_decoder = BitEncoderDecoder(original_image_path, output_image_path, bit_position_to_encode) #Object
@@ -85,18 +87,27 @@ class BitEncoderDecoder:
 #
 # print("Decoded Message:", decoded_message)
 
+def _message_to_bin(message):
+    binary_message = ''.join(format(ord(char), '08b') for char in message)
+    return binary_message
 
-
-def generate_lsb_images(original_image):
-
+def generate_bitsub_images(original_image_path):
+    Images = []
+    original_image = Image.open(original_image_path)
     for i in range(0,8): #Bit
         #Need to obtain maximum amount of characters available to be embedded into the image
         max_chars = 3 * original_image.size[0] * original_image.size[1]
-        #For each bit, 4 images need to be produced
-        for i in range(4):
-            percentage = i/4
-            chars_to_be_embedded = ['a'] * percentage * max_chars
 
+        #For each bit, 4 images need to be produced
+        for j in range(1,5):
+            percentage = j/4
+            chars_to_be_embedded = 'a' * math.trunc((((percentage * max_chars)) / 8)-8)
+            output_image_path = f'C:/Users/naf15/OneDrive/Desktop/StegProject/Steganography-Project/BitSubResults/BitSub_bitpos[{8-(i)}]_{j/4*100}%.png'
+            ImageObj = BitEncoderDecoder(original_image_path,output_image_path,i,3)
+            ImageObj.encode_bit((chars_to_be_embedded))
+            Images.append(ImageObj)
+
+generate_bitsub_images(original_image_path)
 
      # 25%,50%,75%,100% - bit 1-8 so 4*8 = 32 images for one image. Ideal 3 images.
 
