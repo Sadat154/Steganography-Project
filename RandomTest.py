@@ -1,3 +1,2 @@
-x = [1,4,3,7]
-
-print(sorted(x))
+x = format(ord('a'), '08b')
+print(x)
