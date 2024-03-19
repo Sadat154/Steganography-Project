@@ -4,45 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8acbc404-3ff0-4210-ab49-827a4d1d4fc1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Steganography-Project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Steganography-Project.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[1]_100.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[1]_100.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[1]_25.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[1]_25.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[1]_50.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[1]_50.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[1]_75.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[1]_75.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[2]_100.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[2]_100.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[2]_25.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[2]_25.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[2]_50.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[2]_50.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[2]_75.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[2]_75.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[3]_100.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[3]_100.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[3]_25.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[3]_25.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[3]_50.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[3]_50.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[3]_75.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[3]_75.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[4]_100.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[4]_100.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[4]_25.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[4]_25.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[4]_50.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[4]_50.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[4]_75.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[4]_75.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[5]_100.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[5]_100.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[5]_25.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[5]_25.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[5]_50.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[5]_50.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[5]_75.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[5]_75.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[6]_100.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[6]_100.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[6]_25.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[6]_25.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[6]_50.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[6]_50.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[6]_75.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[6]_75.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[7]_100.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[7]_100.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[7]_25.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[7]_25.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[7]_50.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[7]_50.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[7]_75.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[7]_75.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[8]_100.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[8]_100.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[8]_25.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[8]_25.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[8]_50.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[8]_50.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[8]_75.0%.png" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubResults/BitSub_bitpos[8]_75.0%.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubstitution.py" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubstitution.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RandomTest.py" beforeDir="false" afterPath="$PROJECT_DIR$/RandomTest.py" afterDir="false" />
-    </list>
+    <list default="true" id="8acbc404-3ff0-4210-ab49-827a4d1d4fc1" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
