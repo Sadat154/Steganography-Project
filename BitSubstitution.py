@@ -99,5 +99,5 @@ def generate_bitsub_images(original_image_path):
 
 generate_bitsub_images(original_image_path)
 #Need to use decode_bit to test that the code works properly
-     # 25%,50%,75%,100% - bit 1-8 so 4*8 = 32 images for one image. Ideal 3 images.
+# 25%,50%,75%,100% - bit 1-8 so 4*8 = 32 images for one image. Ideal 3 images.
 
