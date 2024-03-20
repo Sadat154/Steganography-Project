@@ -36,6 +36,8 @@ class DCTSteg:
         return rPix,gPix,bPix
 
 
+    def encode_image(self):
+        #blue_channel = b = img[:,:,0]
 
 
 path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/cropped.jpg'

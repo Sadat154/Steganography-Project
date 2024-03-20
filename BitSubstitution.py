@@ -1,5 +1,6 @@
 import math
-
+import cv2
+import numpy as numpy
 from PIL import Image
 
 Delim = '%$£QXT'
@@ -80,24 +81,32 @@ original_image_path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganogr
 def _message_to_bin(message):
     binary_message = ''.join(format(ord(char), '08b') for char in message)
     return binary_message
-
-def generate_bitsub_images(original_image_path):
-    Images = []
-    original_image = Image.open(original_image_path)
-    for i in range(0,8): #Bit
-        #Need to obtain maximum amount of characters available to be embedded into the image
-        max_chars = 3 * original_image.size[0] * original_image.size[1]
-
-        #For each bit, 4 images need to be produced
-        for j in range(1,5):
-            percentage = j/4
-            chars_to_be_embedded = 'a' * math.trunc((((percentage * max_chars)) / 8)-len(Delim)) # We divide by 8 to account for the binary
-            output_image_path = f'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/BitSubResults/BitSub_bitpos[{8-(i)}]_{j/4*100}%.png'
-            ImageObj = BitEncoderDecoder(original_image_path,output_image_path,i)
-            ImageObj.encode_bit((chars_to_be_embedded))
-            Images.append(ImageObj)
-
-generate_bitsub_images(original_image_path)
+#
+# def generate_bitsub_images(original_image_path):
+#     Images = []
+#     original_image = Image.open(original_image_path)
+#     for i in range(0,8): #Bit
+#         #Need to obtain maximum amount of characters available to be embedded into the image
+#         max_chars = 3 * original_image.size[0] * original_image.size[1]
+#
+#         #For each bit, 4 images need to be produced
+#         for j in range(1,5):
+#             percentage = j/4
+#             chars_to_be_embedded = 'a' * math.trunc((((percentage * max_chars)) / 8)-len(Delim)) # We divide by 8 to account for the binary
+#             output_image_path = f'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/BitSubResults/BitSub_bitpos[{8-(i)}]_{j/4*100}%.png'
+#             ImageObj = BitEncoderDecoder(original_image_path,output_image_path,i)
+#             ImageObj.encode_bit((chars_to_be_embedded))
+#             Images.append(ImageObj)
+#
+# generate_bitsub_images(original_image_path)
 #Need to use decode_bit to test that the code works properly
 # 25%,50%,75%,100% - bit 1-8 so 4*8 = 32 images for one image. Ideal 3 images.
+
+# x = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/BitSubResults/IbrahimLikesKids.png'
+# TEST = BitEncoderDecoder(original_image_path, x,7)
+
+
+a = Image.open("cropped.jpg")
+a = numpy.array(a)
+blue_channel = a[:,:,2]
 
