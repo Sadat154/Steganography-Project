@@ -1,4 +1,7 @@
+import itertools
+
 import cv2
+import numpy
 import numpy as np
 from PIL import Image
 
@@ -32,12 +35,21 @@ class DCTSteg:
         rPix = pixel[0]
         gPix = pixel[1]
         bPix = pixel[2]
+
         #Need to make changes to the blue channel as human eye less likely to perceive changes made in blue channel
         return rPix,gPix,bPix
 
 
     def encode_image(self):
-        #blue_channel = b = img[:,:,0]
+        img = numpy.array(self.original_image)
+
+        column,row = self.original_image.size[0], self.original_image.size[1]
+
+        blue_channel = img[:, :, 2]
+        #Need to split the channel into 8x8 blocks
+        imgBlocks = [np.round(blue_channel[j:j + 8, i:i + 8] - 128) for (j, i) in itertools.product(range(0, row, 8),
+                                                                                            range(0, column, 8))]
+        
 
 
 path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/cropped.jpg'

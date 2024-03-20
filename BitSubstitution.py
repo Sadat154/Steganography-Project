@@ -106,7 +106,4 @@ def _message_to_bin(message):
 # TEST = BitEncoderDecoder(original_image_path, x,7)
 
 
-a = Image.open("cropped.jpg")
-a = numpy.array(a)
-blue_channel = a[:,:,2]
 
