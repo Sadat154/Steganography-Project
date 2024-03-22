@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8acbc404-3ff0-4210-ab49-827a4d1d4fc1" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/DisplayImages/Index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubstitution.py" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubstitution.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DCTSteg/PrepareImageForDCT.py" beforeDir="false" afterPath="$PROJECT_DIR$/DCTSteg/PrepareImageForDCT.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DisplayImages.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,6 +19,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -38,22 +40,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.BitSubstitution.executor&quot;: &quot;Run&quot;,
-    &quot;Python.PrepareImageForDCT.executor&quot;: &quot;Run&quot;,
-    &quot;Python.TransformDCT.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/naf15/OneDrive/Desktop/StegProject/Steganography-Project&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "Python.BitSubstitution.executor": "Run",
+    "Python.PrepareImageForDCT.executor": "Run",
+    "Python.TransformDCT.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/naf15/OneDrive/Desktop/StegProject/Steganography-Project",
+    "settings.editor.selected.configurable": "preferences.updates"
   }
-}</component>
-  <component name="RunManager">
+}]]></component>
+  <component name="RunManager" selected="Python.PrepareImageForDCT">
     <configuration name="BitSubstitution" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Steganography-Project" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -161,10 +164,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.PrepareImageForDCT" />
         <item itemvalue="Python.BitSubstitution" />
         <item itemvalue="Python.RandomTest" />
         <item itemvalue="Python.DisplayImages" />
-        <item itemvalue="Python.PrepareImageForDCT" />
         <item itemvalue="Python.TransformDCT" />
       </list>
     </recent_temporary>
