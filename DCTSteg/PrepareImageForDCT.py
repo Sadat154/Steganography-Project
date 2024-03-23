@@ -20,7 +20,8 @@ class DCTSteg:
         self.height = self.original_image.size[1]
         self.width = self.original_image.size[0]
         self.channels = 3 if self.original_image.mode == 'RGB' else 4 #Redundant, should be 3, if 4 then tell them to choose another image
-
+        self.secret_message = '1'
+        self.binary_message = ''
 
 
     def resize_image(self):
@@ -33,7 +34,7 @@ class DCTSteg:
         resized_image.paste(self.original_image, (0, 0))
 
 
-        return resized_image
+        return resized_image, new_height, new_width
 
     def check_message_length(self, height, width, message):
         if((width/8)*(height/8)<len(message)):
@@ -52,11 +53,10 @@ class DCTSteg:
     #Above may be redundant
 
 
-    def encode_image(self):
-        resized_img = self.resize_image()
+    def encode_image(self, bitpos):
+        resized_img, row, column = self.resize_image()
         img = np.array(resized_img)
 
-        column,row = self.width,self.height
 
         #Hide message in the blue channel so we need to separate it
         blue_channel = img[:, :, 2]
@@ -74,15 +74,59 @@ class DCTSteg:
         #Run the 8x8 blocks through the quantisation table
         quantised_blocks = [np.round(dct_block/quantisation_table) for dct_block in dct_blocks]
 
-        #Encoding bit in the chosen bit now
+        #Encoding a bit in the chosen bit
+        message_index = 0
         for quantised_block in quantised_blocks: #Iterate through the blocks
-            pass
+            Test = quantised_block[0][0]
+            Test = np.uint8(Test)
+            Test = np.unpackbits(Test)
+            Test[bitpos] = self.secret_message[message_index]
+            Test = np.packbits(Test)
+            Test = np.float32(Test)
+            Test = Test - 255
+            quantised_block[0][0] = Test
+            message_index += 1
+            if message_index == len(self.secret_message):
+                break
+        #Run the blocks inversely through the quantisation table
+        updated_blocks = [quantised_block * quantisation_table+128 for quantised_block in quantised_blocks]
 
+        updated_blue_channel = []
+
+        for chunkRowBlocks in self.chunks(updated_blocks, column/8): # For each 8 length-ed chunk
+            for rowBlockNum in range(8): #0-7 to iterate through chunk
+                for block in chunkRowBlocks: #For each item in the chunk
+                    updated_blue_channel.extend(block[rowBlockNum]) #Update the blue channel
+
+        #Shape array into correct format such that it can be converted back into an image using PIL
+        updated_blue_channel = np.array(updated_blue_channel).reshape(row,column)
+        #Blue channel currently in float32 format, need to convert
+        updated_blue_channel = np.uint8(updated_blue_channel)
+
+        original_rows = self.height
+        original_columns = self.width
+
+        blue_img = Image.fromarray(updated_blue_channel[:original_rows, :original_columns]) #
+        red_img = Image.fromarray(img[:,:,0][:original_rows, :original_columns])
+        green_img = Image.fromarray(img[:,:,1][:original_rows, :original_columns])
+
+        final_img = Image.merge('RGB', (red_img, green_img, blue_img))
+        #final_img.show()
+        #Add code which saves final_img and encoding FINISHED!
+
+
+
+
+    def chunks(self, currentlist, n): #Takes a list and splits it into chunks of size n
+        m = int(n)
+        for i in range(0, len(currentlist), m):
+            yield currentlist[i:i + m]
 
 
 
 
 path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/cropped.jpg'
 test = DCTSteg(path)
+BitChoice = 8 # 1 = MSB, 8 = LSB
 
-test.encode_image()
+test.encode_image(BitChoice-1)
