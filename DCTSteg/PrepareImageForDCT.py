@@ -20,7 +20,7 @@ class DCTSteg:
         self.height = self.original_image.size[1]
         self.width = self.original_image.size[0]
         self.channels = 3 if self.original_image.mode == 'RGB' else 4 #Redundant, should be 3, if 4 then tell them to choose another image
-        self.secret_message = '1'
+        self.secret_message = '1000101'
         self.binary_message = ''
 
 
@@ -83,7 +83,7 @@ class DCTSteg:
             Test[bitpos] = self.secret_message[message_index]
             Test = np.packbits(Test)
             Test = np.float32(Test)
-            Test = Test - 255
+            Test = Test - 255 # Perhaps need to make it minus different values based on bitpos, i.e., -128 for MSB, not too sure rn
             quantised_block[0][0] = Test
             message_index += 1
             if message_index == len(self.secret_message):
@@ -112,7 +112,44 @@ class DCTSteg:
 
         final_img = Image.merge('RGB', (red_img, green_img, blue_img))
         #final_img.show()
+        #final_img.save('C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/BitSubResults/MSB1.png')
         #Add code which saves final_img and encoding FINISHED!
+
+
+
+    def decode_image(self):
+        pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -127,6 +164,6 @@ class DCTSteg:
 
 path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/cropped.jpg'
 test = DCTSteg(path)
-BitChoice = 8 # 1 = MSB, 8 = LSB
+BitChoice = 1 # 1 = MSB, 8 = LSB
 
 test.encode_image(BitChoice-1)
