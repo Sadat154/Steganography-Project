@@ -20,21 +20,35 @@ class DCTSteg:
         self.height = self.original_image.size[1]
         self.width = self.original_image.size[0]
         self.channels = 3 if self.original_image.mode == 'RGB' else 4 #Redundant, should be 3, if 4 then tell them to choose another image
-        self.secret_message = '1000101'
+        self.secret_message = '111'
         self.binary_message = ''
 
 
-    def resize_image(self):
+    def resize_image(self, img):
         height, width = self.height, self.width
         new_height = height + (8 - (height % 8)) if height % 8 != 0 else height
         new_width = width + (8 - (width % 8)) if width % 8 != 0 else width
 
         # Resize image to a multiple of 8
         resized_image = Image.new('RGB', (new_width, new_height), (0, 0, 0))
-        resized_image.paste(self.original_image, (0, 0))
+        resized_image.paste(img, (0, 0))
 
 
         return resized_image, new_height, new_width
+
+
+    def adjust_bitmask(self, bitpos):
+
+        bitchoice = bitpos + 1
+        ans = 0
+        for i in range(0, (8 - bitchoice)):
+            logical_left_shift = (1 << (i))
+            ans += logical_left_shift
+
+        finalAns = 255 - ans
+
+        return finalAns
+
 
     def check_message_length(self, height, width, message):
         if((width/8)*(height/8)<len(message)):
@@ -42,21 +56,11 @@ class DCTSteg:
             return False
 
 
-    # def split_into_RGB(self,x,y):
-    #     pixel = list(self.original_image.getpixel((x, y)))
-    #     rPix = pixel[0]
-    #     gPix = pixel[1]
-    #     bPix = pixel[2]
-    #
-    #     #Need to make changes to the blue channel as human eye less likely to perceive changes made in blue channel
-    #     return rPix,gPix,bPix
-    #Above may be redundant
-
-
     def encode_image(self, bitpos):
-        resized_img, row, column = self.resize_image()
+        resized_img, row, column = self.resize_image(self.original_image)
         img = np.array(resized_img)
 
+        print(((self.width/8)*(self.height/8)))
 
         #Hide message in the blue channel so we need to separate it
         blue_channel = img[:, :, 2]
@@ -77,14 +81,14 @@ class DCTSteg:
         #Encoding a bit in the chosen bit
         message_index = 0
         for quantised_block in quantised_blocks: #Iterate through the blocks
-            Test = quantised_block[0][0]
-            Test = np.uint8(Test)
-            Test = np.unpackbits(Test)
-            Test[bitpos] = self.secret_message[message_index]
-            Test = np.packbits(Test)
-            Test = np.float32(Test)
-            Test = Test - 255 # Perhaps need to make it minus different values based on bitpos, i.e., -128 for MSB, not too sure rn
-            quantised_block[0][0] = Test
+            DC_coeff = quantised_block[0][0]
+            DC_coeff = np.uint8(DC_coeff)
+            DC_coeff = np.unpackbits(DC_coeff)
+            DC_coeff[bitpos] = self.secret_message[message_index]
+            DC_coeff = np.packbits(DC_coeff)
+            DC_coeff = np.float32(DC_coeff)
+            DC_coeff = DC_coeff - self.adjust_bitmask(bitpos)#value to be minused must be changed e.g., if bit pos = 7(8) we minus 255 if 6(7) we minus 254
+            quantised_block[0][0] = DC_coeff
             message_index += 1
             if message_index == len(self.secret_message):
                 break
@@ -112,41 +116,49 @@ class DCTSteg:
 
         final_img = Image.merge('RGB', (red_img, green_img, blue_img))
         #final_img.show()
-        #final_img.save('C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/BitSubResults/MSB1.png')
+        final_img.save('C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/BitSubResults/A_5_DCT.png')
         #Add code which saves final_img and encoding FINISHED!
 
 
 
-    def decode_image(self):
-        pass
+    def decode_image(self, image_path, bit_pos):
+        img = Image.open(image_path)
+        img, row, column = self.resize_image(img) #Row, Column remains unchanged, however image changes
 
+        img = np.array(img)
 
+        #Obtain blue channel as this was the channel that was modified
+        blue_channel = img[:, :, 2]
 
+        #Convert to float32 for dct function
+        blue_channel = np.float32(blue_channel)
 
+        #break into 8x8 blocks
+        image_blocks = [blue_channel[j:j+8, i:i+8]-128 for (j,i) in itertools.product(range(0,row,8),range(0,column,8))]
 
+        #run 8x8 blocks through the quantisation table
+        quantised_blocks = [image_block / quantisation_table for image_block in image_blocks]
 
+        buff = 0
+        finalMsg = ''
+        i = 0
 
+        for quantised_block in quantised_blocks:
+            DC_coeff = quantised_block[0][0]
+            DC_coeff = np.uint8(DC_coeff)
+            DC_coeff = np.unpackbits(DC_coeff)
 
+            if DC_coeff[bit_pos] == 1:
+                buff += (0 & 1) << (7-i)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            elif DC_coeff[bit_pos] == 0:
+                buff += (1 & 1) << (7-i)
+            i += 1
+            if i == 8:
+                finalMsg += chr(buff)
+                i = 0
+                buff = 0
+                #line 202 - 209 skipped
 
 
 
@@ -161,9 +173,11 @@ class DCTSteg:
 
 
 
+outpt = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/BitSubResults/A_5_DCT.png'
 
 path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/cropped.jpg'
 test = DCTSteg(path)
-BitChoice = 1 # 1 = MSB, 8 = LSB
+BitChoice = 8 # 0 = MSB, 7 = LSB
 
-test.encode_image(BitChoice-1)
+#test.decode_image(outpt, 5)
+#test.encode_image(5)

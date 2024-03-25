@@ -6,8 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="8acbc404-3ff0-4210-ab49-827a4d1d4fc1" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BitSubstitution.py" beforeDir="false" afterPath="$PROJECT_DIR$/BitSubstitution.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DCTSteg/PrepareImageForDCT.py" beforeDir="false" afterPath="$PROJECT_DIR$/DCTSteg/PrepareImageForDCT.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DCTSteg/PrepareImageForDCT.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DCTSteg/TransformDCT.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/RandomTest.py" beforeDir="false" afterPath="$PROJECT_DIR$/RandomTest.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -63,7 +63,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Python.BitSubstitution">
+  <component name="RunManager" selected="Python.PrepareImageForDCT">
     <configuration name="BitSubstitution" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Steganography-Project" />
       <option name="ENV_FILES" value="" />
@@ -181,9 +181,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.BitSubstitution" />
         <item itemvalue="Python.PrepareImageForDCT" />
         <item itemvalue="Python.RandomTest" />
+        <item itemvalue="Python.BitSubstitution" />
         <item itemvalue="Python.DisplayImages" />
         <item itemvalue="Python.TransformDCT" />
       </list>
@@ -211,6 +211,7 @@
       <workItem from="1689666673614" duration="2719000" />
       <workItem from="1711187321867" duration="5703000" />
       <workItem from="1711221480257" duration="1969000" />
+      <workItem from="1711272402446" duration="8872000" />
     </task>
     <servers />
   </component>
@@ -229,8 +230,8 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/PrepareImageForDCT_py$RandomTest.coverage" NAME="RandomTest Coverage Results" MODIFIED="1711221773363" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PrepareImageForDCT_py$RandomTest.coverage" NAME="RandomTest Coverage Results" MODIFIED="1711281003655" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/PrepareImageForDCT_py$BitSubstitution.coverage" NAME="BitSubstitution Coverage Results" MODIFIED="1711223262206" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/PrepareImageForDCT_py$PrepareImageForDCT.coverage" NAME="PrepareImageForDCT Coverage Results" MODIFIED="1711222708347" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DCTSteg" />
+    <SUITE FILE_PATH="coverage/PrepareImageForDCT_py$PrepareImageForDCT.coverage" NAME="PrepareImageForDCT Coverage Results" MODIFIED="1711281656385" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DCTSteg" />
   </component>
 </project>
