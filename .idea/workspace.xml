@@ -5,10 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8acbc404-3ff0-4210-ab49-827a4d1d4fc1" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/Steganography-Project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Steganography-Project.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DCTSteg/PrepareImageForDCT.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DCTSteg/TransformDCT.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RandomTest.py" beforeDir="false" afterPath="$PROJECT_DIR$/RandomTest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SpreadSpectrum.py" beforeDir="false" afterPath="$PROJECT_DIR$/SpreadSpectrum.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cropped.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/cropped.jpg" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,30 +41,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;Python.BitSubstitution.executor&quot;: &quot;Run&quot;,
-    &quot;Python.PrepareImageForDCT.executor&quot;: &quot;Run&quot;,
-    &quot;Python.RandomTest.executor&quot;: &quot;Run&quot;,
-    &quot;Python.TransformDCT.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/naf15/OneDrive/Desktop/StegProject/Steganography-Project&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "Python.BitSubstitution.executor": "Run",
+    "Python.PrepareImageForDCT.executor": "Run",
+    "Python.RandomTest.executor": "Run",
+    "Python.SpreadSpectrum.executor": "Run",
+    "Python.TransformDCT.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/naf15/OneDrive/Desktop/StegProject/Steganography-Project",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RunManager" selected="Python.PrepareImageForDCT">
+}]]></component>
+  <component name="RunManager" selected="Python.SpreadSpectrum">
     <configuration name="BitSubstitution" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Steganography-Project" />
       <option name="ENV_FILES" value="" />
@@ -156,7 +158,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="TransformDCT" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="SpreadSpectrum" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Steganography-Project" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -170,7 +172,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TransformDCT.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/SpreadSpectrum.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -181,18 +183,18 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.SpreadSpectrum" />
         <item itemvalue="Python.PrepareImageForDCT" />
         <item itemvalue="Python.RandomTest" />
         <item itemvalue="Python.BitSubstitution" />
         <item itemvalue="Python.DisplayImages" />
-        <item itemvalue="Python.TransformDCT" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-09665e90c3a7-b11f5e8da5ad-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.15026.15" />
+        <option value="bundled-python-sdk-5a2391486177-2887949eec09-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.13763.11" />
       </set>
     </attachedChunks>
   </component>
@@ -212,6 +214,9 @@
       <workItem from="1711187321867" duration="5703000" />
       <workItem from="1711221480257" duration="1969000" />
       <workItem from="1711272402446" duration="8872000" />
+      <workItem from="1711641772396" duration="13000" />
+      <workItem from="1711641792669" duration="199000" />
+      <workItem from="1711642281677" duration="1375000" />
     </task>
     <servers />
   </component>
@@ -230,8 +235,9 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/PrepareImageForDCT_py$RandomTest.coverage" NAME="RandomTest Coverage Results" MODIFIED="1711281003655" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/PrepareImageForDCT_py$BitSubstitution.coverage" NAME="BitSubstitution Coverage Results" MODIFIED="1711223262206" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/PrepareImageForDCT_py$PrepareImageForDCT.coverage" NAME="PrepareImageForDCT Coverage Results" MODIFIED="1711281656385" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DCTSteg" />
+    <SUITE FILE_PATH="coverage/PrepareImageForDCT_py$RandomTest.coverage" NAME="RandomTest Coverage Results" MODIFIED="1711281003655" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PrepareImageForDCT_py$SpreadSpectrum.coverage" NAME="SpreadSpectrum Coverage Results" MODIFIED="1711643609273" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
