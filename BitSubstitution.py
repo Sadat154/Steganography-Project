@@ -1,24 +1,22 @@
-import math
-import cv2
-import numpy as numpy
 from PIL import Image
 
 Delim = '%$£QXT'
 class BitEncoderDecoder:
-    def __init__(self, original_image_path, encoded_image_path, bit_position):
+    def __init__(self, original_image_path, encoded_image_path, secret_message, bit_position):
         self.original_image = Image.open(original_image_path)
         self.encoded_image_path = encoded_image_path #Where the encoded image shall be stored
         self.bit_position = bit_position
         self.number_of_channels = 3
+        self.secret_message = secret_message
 
 
     def _message_to_bin(self, message):
         binary_message = ''.join(format(ord(char), '08b') for char in message)
         return binary_message
 
-    def encode_bit(self, secret_message):
+    def encode_bit(self):
         original_image = self.original_image
-        secret_message += Delim # Delimiter to indicate end of message
+        secret_message = self.secret_message + Delim # Delimiter to indicate end of message
         binary_message = self._message_to_bin(secret_message)
         if len(binary_message) > self.number_of_channels * original_image.size[0] * original_image.size[1]:
             raise ValueError("Message is too long to be encoded in the image")

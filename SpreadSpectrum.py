@@ -1,141 +1,196 @@
 import cv2
-import sys
-import string
-import random
-import os
-import re
-from cryptography.fernet import Fernet
+from PIL import Image
+import array
+import numpy as np
+from numpy import *
+from random import gauss
+from random import seed
 
-def encode():
-	print("\n-----------------------------")
-	print("|     Encoding Starts..     |")
-	print("-----------------------------\n")
-
-	while True: # Asks the user for a carrier name, if none exists returns to start
-		image = input("Enter image carrier name (inc. extension)...\n")
-		if not image:
-			print('Nothing has been Entered!\n')
-			continue
-		elif not os.path.isfile(image):
-			print("\nNo file exists, try again!\n")
-			continue
-		else:
-			break
-
-	image = cv2.imread(image) # Loads image from specified
-	max_bytes = (image.shape[0] * image.shape[1]) // 8 # maximum bytes to encode
-
-	while True: # Asks the user for the secret message, if none exists returns to start
-		secret_data = input("\nEnter secret message...\n")
-		if not secret_data:
-			print('Nothing has been Entered!\n')
-			continue
-		else:
-			key = Fernet.generate_key() # Generates a key
-			f = Fernet(key) # Assigns variable
-			secret_data = f.encrypt(secret_data.encode()) # Encrypts secret message based on key
-
-			secret_data = str(secret_data.decode()) + "e1g0l" # Adds an end delimiter to the message
-			secret_data = "SdfD1" + secret_data + str(key.decode()) # Adds a start delimiter to the message
-			secret_data = secret_data + "m1Ku1"
-			#print(secret_data, "\n") # Test variable
-
-			if len(secret_data) > max_bytes | len(key) > max_bytes:
-				print("\n------------ ERROR ------------")
-				print("Secret message is too big for the carrier")
-				print("Try a bigger carrier or smaller message\n")
-				print("RIP G")
-
-			# Finds out the total amount of duplicate secret messages that can be embedded
-			sizeOfMessage = sys.getsizeof(secret_data)
-			lengthmessage = max_bytes//sizeOfMessage
-			new_Secret_Data = secret_data * lengthmessage # Muliplies the secret message
-			break # Else continues
-
-	while True: # Asks the user for a new image name, if none exists returns to start
-		newfile = input("\nEnter new image name (inc. extension)...\n")
-		if not newfile:
-			print('Nothing has been Entered!\n')
-			continue
-		else:
-			break
-
-	bank_secretMessage = 0 # Set index values to zero
-	b_secretMessage = ''.join([ format(ord(i), "08b") for i in new_Secret_Data ]) # Converts the secret message & key to binary
-	len_secretMessage = len(b_secretMessage) # Size of data to hide
-
-	for row in image:
-		for pixel in row:
-			r, g, b = [ format(i, "08b") for i in pixel ] # Converts RGB pixels to binary
-			if bank_secretMessage < len_secretMessage: # If data count is less than length
-				pixel[0] = int(r[:-1] + b_secretMessage[bank_secretMessage], 2) # Modify the LSB (Red pixel)
-				bank_secretMessage += 1 # Increase count
-
-			if bank_secretMessage < len_secretMessage: # If data count is less than length
-				pixel[1] = int(g[:-1] + b_secretMessage[bank_secretMessage], 2) # Modify the LSB (Green pixel)
-				bank_secretMessage += 1 # Increase count
-
-			if bank_secretMessage < len_secretMessage: # If data count is less than length
-				pixel[2] = int(b[:-1] + b_secretMessage[bank_secretMessage], 2) # Modify the LSB (Blue pixel)
-				bank_secretMessage += 1 # Increase count
-
-			# If all data counts are greaterr than lengths
-			if bank_secretMessage >= len_secretMessage:
-				break
-
-	cv2.imwrite(newfile, image) # Process to write a new image file, newfile = the new image name, image = the image data
-
-	print("\nSteganography encoding complete!")
+grap = cv2.imread("newred1.png")
+row = len(grap)
+print("grap modified")
+ta = [[0 for i in range(8)] for j in range(row)]
+i = 0
+j = 0
+while (j < row):
+    while (i < 8):
+        ta[j][i] = grap[j, i, 2]
+        i += 1
+    j += 1
+    i = 0
+# print(ta) #pixel values
 
 
-def decode():
-	print("\n-----------------------------")
-	print("|     Decoding Starts..     |")
-	print("-----------------------------\n")
+# retrieving begins
+tb = [[0 for i in range(8)] for k in range(row)]
+k = 0
+i = 0
+while (k < row):
+    for i in range(8):
+        if i == 0:
+            ta[k][i] = -1 * (256 - ta[k][i])
+        tb[k][i] = (ta[k][i]) / (2 ** 8)
+        i += 1
+    k += 1
+    i = 0
+print("decimal=")
+# print(tb)#converting i values back to decimal value
 
-	while True:  # Asks the user for a carrier name, if none exists returns to start
-		image = input("Enter image carrier name (inc. extension)...\n")
-		if not image:
-			print('Nothing has been Entered!\n')
-			continue
-		elif not os.path.isfile(image):
-			print("\nNo file exists, try again!\n")
-			continue
-		else:
-			break
+sr = [[0 for i in range(8)] for j in range(row)]
+key3 = input("enter key3:")
+length = len(key3)
+p = list();
+for i in range(length):
+    p.append(0)
+w = 0
+for v in key3:
+    p[w] = int(v)
+    w += 1
+w = 0
+v = 0
+print(p)  # key3
 
-	image = cv2.imread(image)  # read the image
-	bank_secretMessage = ""  # Holds LSB secret message, (Red pixel)
-
-	# Extract LSB and store in binary_data[x]
-	for row in image:
-		for pixel in row:
-			r, g, b = [format(i, "08b") for i in pixel]
-			bank_secretMessage += r[-1]
-			bank_secretMessage += g[-1]
-			bank_secretMessage += b[-1]
-
-	# Divide all LSB and convert to charcters
-	all_data_secretMessage = [bank_secretMessage[i: i + 8] for i in range(0, len(bank_secretMessage), 8)]
-	decoded_secretMessage = ""
-
-	for byte in all_data_secretMessage:
-		decoded_secretMessage += chr(int(byte, 2))
-
-	# Finds the first delimiter, then removes the last 5 chars
-	secretMessage = decoded_secretMessage.split("SdfD1")[1]  # [:-5]
-	# Takes the secretMessage splits backwards to recover the message, then removes the last 5 chars
-	split_1 = secretMessage.split("e1g0l")[1][:-5]
-	# Takes the secretMessage splits forwards to recover the key
-	split_2 = secretMessage.split("e1g0l")[0]
-
-	decoded = Fernet(split_1).decrypt(split_2.encode())  # Decrypt with key
-
-	print("\n*************************")
-	print("*     Secret Message    *")
-	print("*************************")
-	print(re.sub("(.{40})", "\\1\n", decoded.decode()))  # Prints secret message and displays 40 characters on CLI
-
-	# print(decoded_data[:-5]) # Displays decoded message full width
+j = 0
+i = 0
+l = 0
+while (j < row):
+    for l in p:
+        if i > 7:
+            i = 0
+        else:
+            sr[j][i] = tb[j][l]
+        i += 1
+        l += 1
+    l = p[0]
+    j += 1
+    i = 0
+print("interleaving retrieved")
+# print(sr)#interleaving done
+o = 0
+p = 0
+# lsb changed
 
 
+seed(1)
+# create white noise series;not displayed here
+series1r = [gauss(0.0, 1.0) for i in range(row * 8)]
+seriesr = reshape(series1r, (row, 8))
+minir = seriesr.min()
+zr = seriesr - minir
+maxir = zr.max()
+qr = maxir / 2 ** 7
+audior = fix(zr / qr)
+signal1r = audior / audior.max()
+
+signalr = [[0 for i in range(8)] for j in range(row)]
+key2 = input("enter the second key:")
+lengt = len(key2)
+qr = list();
+for i in range(lengt):
+    qr.append(0)
+w = 0
+for p in key2:
+    qr[w] = int(p)
+    w += 1
+w = 0
+p = 0
+print(qr)  # key2
+
+j = 0
+i = 0
+l = 0
+while (j < row):
+    for l in qr:
+        if i > 7:
+            i = 0
+        else:
+            signalr[j][i] = (signal1r[j][l])
+        i += 1
+        l += 1
+    l = qr[0]
+    j += 1
+    i = 0
+print("noice signal")
+print(signalr)
+
+# Noise generated;not displayed
+
+Bir = [[0 for i in range(8)] for j in range(row)]
+while (o < row):
+    while (p < 8):
+        try:
+            Bir[o][p] = ((sr[o][p] / signalr[o][p]))
+        except:
+            Bir[0][p] = 0
+        p += 1
+    o += 1
+    p = 0  # embedded signal(product of message signal and noise)
+o = 0
+p = 0
+print("embeddeed signal")
+# print(Bir)
+
+
+key = input("Enter key1 : ")
+lenge = len(key)
+o = list();
+for i in range(lenge):
+    o.append(0)  # initializing
+j = 0
+for i in key:
+    o[j] = int(i)
+    j += 1
+j = 0
+i = 0
+bir = [[0 for i in range(8)] for j in range(row // 8)]
+print(o)  # key 1 displayed
+while (j < row // 8):
+    for l in o:
+        if i > 7:
+            i = 0
+        if j > 0:
+            bir[j][i] = Bir[l + (8 * j)][7]
+        else:
+            bir[j][i] = Bir[l][7]
+        i += 1
+    j += 1
+    i = 0
+print("lsb changed")
+# print(bir)
+
+
+i = 0
+j = 0
+while (j < row // 8):
+    while (i < 8):
+        if bir[j][i] == -1.0:
+            bir[j][i] = 0
+        else:
+            bir[j][i] = 1
+        i += 1
+    j += 1
+    i = 0
+i = 0
+j = 0
+# print(bir)#converting -1s to 0s
+
+var = [0 for i in range(row // 8)]
+i = 7
+j = 0
+while (j < row / 8):
+    sommy = 0
+    while (i > -1):
+        sommy += bir[j][i] * (2 ** (7 - i))
+        i -= 1
+    var[j] = sommy
+    j += 1
+    i = 7
+i = 0
+j = 0
+# print(var)#decimal values
+
+for i in range(row // 8):
+    if var[i] == 92:
+        break
+    else:
+        print(chr(var[i]))

@@ -2,7 +2,8 @@ import itertools
 import cv2
 import numpy as np
 from PIL import Image
-
+#Need to add feature where user can choose which channel to embedd images
+#in, currently its blue channel only
 
 
 
@@ -15,13 +16,16 @@ quantisation_table = np.array([[16,11,10,16,24,40,51,61],     # Luminance (Y) Qu
                     [49,64,78,87,103,121,120,101],
                     [72,92,95,98,112,100,103,99]])
 class DCTSteg:
-    def __init__(self, image_path):
+    def __init__(self, image_path, secret_message, binary_message, channel):
         self.original_image = Image.open(image_path)
         self.height = self.original_image.size[1]
         self.width = self.original_image.size[0]
-        self.channels = 3 if self.original_image.mode == 'RGB' else 4 #Redundant, should be 3, if 4 then tell them to choose another image
-        self.secret_message = '111'
-        self.binary_message = ''
+        self.channels = 3
+        self.secret_message = secret_message
+        self.binary_message = binary_message
+        self.channel_to_modify = channel
+
+
 
 
     def resize_image(self, img):
@@ -84,13 +88,13 @@ class DCTSteg:
             DC_coeff = quantised_block[0][0]
             DC_coeff = np.uint8(DC_coeff)
             DC_coeff = np.unpackbits(DC_coeff)
-            DC_coeff[bitpos] = self.secret_message[message_index]
+            DC_coeff[bitpos] = self.binary_message[message_index]
             DC_coeff = np.packbits(DC_coeff)
             DC_coeff = np.float32(DC_coeff)
             DC_coeff = DC_coeff - self.adjust_bitmask(bitpos)#value to be minused must be changed e.g., if bit pos = 7(8) we minus 255 if 6(7) we minus 254
             quantised_block[0][0] = DC_coeff
             message_index += 1
-            if message_index == len(self.secret_message):
+            if message_index == len(self.binary_message):
                 break
         #Run the blocks inversely through the quantisation table
         updated_blocks = [quantised_block * quantisation_table+128 for quantised_block in quantised_blocks]
@@ -116,7 +120,7 @@ class DCTSteg:
 
         final_img = Image.merge('RGB', (red_img, green_img, blue_img))
         #final_img.show()
-        final_img.save('C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/BitSubResults/A_5_DCT.png')
+        #final_img.save('C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/BitSubResults/A_5_DCT.png')
         #Add code which saves final_img and encoding FINISHED!
 
 
