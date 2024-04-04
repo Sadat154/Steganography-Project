@@ -14,6 +14,24 @@ class BitEncoderDecoder:
         binary_message = ''.join(format(ord(char), '08b') for char in message)
         return binary_message
 
+    def decimal_to_binary(self, decimal_value):
+        # Convert decimal to binary string
+        binary_string = bin(decimal_value)[2:]  # Remove '0b' prefix from binary string
+
+        # Pad the binary string with leading zeros if necessary to ensure it's 8 bits long
+        padded_binary_string = binary_string.zfill(8)
+
+        return padded_binary_string
+
+    def binary_to_decimal(self, binary_string):
+        # Convert binary string to decimal value
+        decimal_value = int(binary_string, 2)
+
+        return decimal_value
+
+    # Example usage:
+
+
     def encode_bit(self):
         original_image = self.original_image
         secret_message = self.secret_message + Delim # Delimiter to indicate end of message
@@ -25,18 +43,30 @@ class BitEncoderDecoder:
         for y in range(original_image.size[1]):
             for x in range(original_image.size[0]):
                 pixel = list(original_image.getpixel((x, y)))
+                pixellist_to_binary = [self.decimal_to_binary(i) for i in pixel]
 
                 for i in range(self.number_of_channels):
                     if data_index < len(binary_message):
-                        pixel[i] = pixel[i] & ~(1 << self.bit_position) | (int(binary_message[data_index]) << self.bit_position)
+
+                        pixel_binary = list([j for j in pixellist_to_binary[i]]) # Split the pixel into its binary letters
+
+                        pixel_binary[self.bit_position] = binary_message[data_index]
+                        #Need to convert value to decimal now
+
+                        pixel_binary = self.binary_to_decimal(''.join(pixel_binary))
+                        #Finally need to adjust the decimal value stored in pixel
+                        pixel[i] = pixel_binary
+                        #pixel[i] = pixel[i] & ~(1 << self.bit_position) | (int(binary_message[data_index]) << self.bit_position)
+                        #print(test[i])
                         data_index += 1
+
 
                 original_image.putpixel((x, y), tuple(pixel))
 
-        original_image.save(self.encoded_image_path)
+        original_image.save("Hi1.png")
 
     def decode_bit(self):
-        encoded_image = Image.open(self.encoded_image_path)
+        encoded_image = Image.open("Hi1.png")
 
         binary_message = ''
         message_length = 0
@@ -48,11 +78,13 @@ class BitEncoderDecoder:
                     pixel = list(encoded_image.getpixel((x, y)))
 
                     for i in range(3):
-                        binary_message += str((pixel[i] >> self.bit_position) & 1)
+                        binary_message += str((self.decimal_to_binary(pixel[i]))[self.bit_position])
+
                         decoded_message = ''.join(
                             [chr(int(binary_message[i:i + 8], 2)) for i in range(0, len(binary_message), 8)])
+
                         if Delim in decoded_message:
-                            print(decoded_message)
+
                             break
                         message_length += 1
 
@@ -107,10 +139,15 @@ def _message_to_bin(message):
 # secret_msg = 'ABC'
 # output_path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/BitSubResults/ABCtest2.png'
 #
-decTest = BitEncoderDecoder("cropped.jpg", "hi.png","hello", 4)
+# decTest = BitEncoderDecoder("cropped.jpg", "hi.png","hello", 4)
+#
+# decTest.encode_bit()
+#
+# print(decTest.decode_bit())
 
-decTest.encode_bit()
 
-print(decTest.decode_bit())
 
-#REMINDER THE WAY MY CODE WORKS IF BIT POSITION = 0 THEN LSB IF =7 THEN MSB
+X = BitEncoderDecoder("C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/OriginalImages/cropped.jpg","shush","H",0)
+X.encode_bit()
+X.decode_bit()
+#REMINDER THE WAY MY CODE WORKS IF BIT POSITION = 0 THEN MSB IF =7 THEN LSB Fixed the issue GG

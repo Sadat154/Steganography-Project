@@ -2,8 +2,10 @@ import itertools
 import cv2
 import numpy as np
 from PIL import Image
-#Need to add feature where user can choose which channel to embedd images
-#in, currently its blue channel only
+
+
+
+Delim = '%$£QXT'
 
 
 channels_dict = {
@@ -179,7 +181,9 @@ class DCTSteg:
                 finalMsg += chr(dec_value)
                 i = 0
                 dec_value = 0
-                #line 202 - 209 skipped
+                #Now we want to check if delimiter has been reached so that we can end the decoding process
+                if Delim in finalMsg:
+                    return finalMsg[:-(len(Delim))]
 
 
 
@@ -194,10 +198,7 @@ class DCTSteg:
 
 
 
-outpt = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/BitSubResults/A_5_DCT.png'
 
-path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/cropped.jpg'
-test = DCTSteg(path)
 BitChoice = 8 # 0 = MSB, 7 = LSB
 
 #test.decode_image(outpt, 5)
