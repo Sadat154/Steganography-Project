@@ -73,7 +73,7 @@ class BitEncoderDecoder:
 
 
 
-original_image_path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/cropped.jpg'
+#original_image_path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/cropped.jpg'
 
 
 def _message_to_bin(message):
@@ -107,10 +107,10 @@ def _message_to_bin(message):
 # secret_msg = 'ABC'
 # output_path = 'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/BitSubResults/ABCtest2.png'
 #
-# decTest = BitEncoderDecoder(original_image_path, output_path,0)
-#
-# decTest.encode_bit(secret_msg)
-#
-# print(decTest.decode_bit())
+decTest = BitEncoderDecoder("cropped.jpg", "hi.png","hello", 4)
+
+decTest.encode_bit()
+
+print(decTest.decode_bit())
 
 #REMINDER THE WAY MY CODE WORKS IF BIT POSITION = 0 THEN LSB IF =7 THEN MSB

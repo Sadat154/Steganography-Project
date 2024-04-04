@@ -6,6 +6,12 @@ from PIL import Image
 #in, currently its blue channel only
 
 
+channels_dict = {
+    'r':0,
+    'g':1,
+    'b':2
+}
+
 
 quantisation_table = np.array([[16,11,10,16,24,40,51,61],     # Luminance (Y) Quantization Table (Standard Quality)
                     [12,12,14,19,26,58,60,55],
@@ -23,7 +29,7 @@ class DCTSteg:
         self.channels = 3
         self.secret_message = secret_message
         self.binary_message = binary_message
-        self.channel_to_modify = channel
+        self.channel_to_modify = channels_dict[channel.lower()]
 
 
 
@@ -67,13 +73,13 @@ class DCTSteg:
         print(((self.width/8)*(self.height/8)))
 
         #Hide message in the blue channel so we need to separate it
-        blue_channel = img[:, :, 2]
+        current_channel = img[:, :, self.channel_to_modify]
 
         #Convert channel to type float 32 for dct function
-        blue_channel = np.float32(blue_channel)
+        current_channel = np.float32(current_channel)
 
         #Need to split the channel into 8x8 blocks
-        image_blocks = [np.round(blue_channel[j:j + 8, i:i + 8] - 128) for (j, i) in itertools.product(range(0, row, 8), range(0, column, 8))]
+        image_blocks = [np.round(current_channel[j:j + 8, i:i + 8] - 128) for (j, i) in itertools.product(range(0, row, 8), range(0, column, 8))]
 
 
         #Run the 8x8 blocks through the DCT function
@@ -99,24 +105,35 @@ class DCTSteg:
         #Run the blocks inversely through the quantisation table
         updated_blocks = [quantised_block * quantisation_table+128 for quantised_block in quantised_blocks]
 
-        updated_blue_channel = []
+        updated_channel = []
 
         for chunkRowBlocks in self.chunks(updated_blocks, column/8): # For each 8 length-ed chunk
             for rowBlockNum in range(8): #0-7 to iterate through chunk
                 for block in chunkRowBlocks: #For each item in the chunk
-                    updated_blue_channel.extend(block[rowBlockNum]) #Update the blue channel
+                    updated_channel.extend(block[rowBlockNum]) #Update the blue channel
 
         #Shape array into correct format such that it can be converted back into an image using PIL
-        updated_blue_channel = np.array(updated_blue_channel).reshape(row,column)
+        updated_channel = np.array(updated_channel).reshape(row,column)
         #Blue channel currently in float32 format, need to convert
-        updated_blue_channel = np.uint8(updated_blue_channel)
+        updated_channel = np.uint8(updated_channel)
 
         original_rows = self.height
         original_columns = self.width
 
-        blue_img = Image.fromarray(updated_blue_channel[:original_rows, :original_columns]) #
-        red_img = Image.fromarray(img[:,:,0][:original_rows, :original_columns])
-        green_img = Image.fromarray(img[:,:,1][:original_rows, :original_columns])
+        if self.channel_to_modify == 1: #Green channel has been modified, rest same
+            blue_img = Image.fromarray(img[:,:,2][:original_rows, :original_columns])
+            red_img = Image.fromarray(img[:,:,0][:original_rows, :original_columns])
+            green_img = Image.fromarray(updated_channel[:original_rows, :original_columns])
+        elif self.channel_to_modify == 2: # Blue channel has been modified rest stay the same
+            blue_img = Image.fromarray(updated_channel[:original_rows, :original_columns])
+            red_img = Image.fromarray(img[:,:,0][:original_rows, :original_columns])
+            green_img = Image.fromarray(img[:,:,1][:original_rows, :original_columns])
+
+        else: #Red channel has been modified the rest stay the same
+            blue_img = Image.fromarray(img[:,:,2][:original_rows, :original_columns])
+            red_img = Image.fromarray(updated_channel[:original_rows, :original_columns])
+            green_img = Image.fromarray(img[:,:,1][:original_rows, :original_columns])
+
 
         final_img = Image.merge('RGB', (red_img, green_img, blue_img))
         #final_img.show()
@@ -143,7 +160,7 @@ class DCTSteg:
         #run 8x8 blocks through the quantisation table
         quantised_blocks = [image_block / quantisation_table for image_block in image_blocks]
 
-        buff = 0
+        dec_value = 0 #Will be used to store the decimal value of a character
         finalMsg = ''
         i = 0
 
@@ -153,15 +170,15 @@ class DCTSteg:
             DC_coeff = np.unpackbits(DC_coeff)
 
             if DC_coeff[bit_pos] == 1:
-                buff += (0 & 1) << (7-i)
+                dec_value += (0 & 1) << (7-i)
 
             elif DC_coeff[bit_pos] == 0:
-                buff += (1 & 1) << (7-i)
+                dec_value += (1 & 1) << (7-i)
             i += 1
             if i == 8:
-                finalMsg += chr(buff)
+                finalMsg += chr(dec_value)
                 i = 0
-                buff = 0
+                dec_value = 0
                 #line 202 - 209 skipped
 
 
