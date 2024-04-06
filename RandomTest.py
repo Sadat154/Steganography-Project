@@ -1,3 +1,3 @@
-x = "123"
-x[1] = "2"
-print(x)
+x = 'abcdef'
+print(x[:-2
+      ])

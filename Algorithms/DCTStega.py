@@ -22,16 +22,24 @@ quantisation_table = np.array(
 
 
 class DCTSteg:
-    def __init__(self, image_path, secret_message, binary_message, channel):
-        self.original_image = Image.open(image_path)
+    def __init__(self, original_image_path, encoded_image_path, secret_message, bit_position, channel):
+        self.original_image = Image.open(original_image_path)
+        self.encoded_image_path = encoded_image_path
         self.height = self.original_image.size[1]
         self.width = self.original_image.size[0]
         self.channels = 3
         self.secret_message = secret_message
-        self.binary_message = binary_message
+        self.bit_position = bit_position
+        self.binary_message = self.message_to_bin(secret_message)
         self.channel_to_modify = channels_dict[channel.lower()]
         self.__DELIM = "%$£QXT"
 
+
+
+
+    def message_to_bin(self, message):
+        binary_message = "".join(format(ord(char), "08b") for char in message)
+        return binary_message
     def resize_image(self, img):
         height, width = self.height, self.width
         new_height = height + (8 - (height % 8)) if height % 8 != 0 else height
@@ -60,11 +68,10 @@ class DCTSteg:
             print("Error: Message too large to encode in image")
             return False
 
-    def encode_image(self, bitpos):
+    def encode_image(self):
         resized_img, row, column = self.resize_image(self.original_image)
         img = np.array(resized_img)
 
-        print(((self.width / 8) * (self.height / 8)))
 
         # Hide message in the blue channel so we need to separate it
         current_channel = img[:, :, self.channel_to_modify]
@@ -92,11 +99,11 @@ class DCTSteg:
             DC_coeff = quantised_block[0][0]
             DC_coeff = np.uint8(DC_coeff)
             DC_coeff = np.unpackbits(DC_coeff)
-            DC_coeff[bitpos] = self.binary_message[message_index]
+            DC_coeff[self.bit_position] = self.binary_message[message_index]
             DC_coeff = np.packbits(DC_coeff)
             DC_coeff = np.float32(DC_coeff)
             DC_coeff = DC_coeff - self.adjust_bitmask(
-                bitpos
+                self.bit_position
             )  # value to be minused must be changed e.g., if bit pos = 7(8) we minus 255 if 6(7) we minus 254
             quantised_block[0][0] = DC_coeff
             message_index += 1
@@ -150,9 +157,7 @@ class DCTSteg:
             green_img = Image.fromarray(img[:, :, 1][:original_rows, :original_columns])
 
         final_img = Image.merge("RGB", (red_img, green_img, blue_img))
-        # final_img.show()
-        # final_img.save('C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/BitSubResults/A_5_DCT.png')
-        # Add code which saves final_img and encoding FINISHED!
+        final_img.save(self.encoded_image_path)
 
     def decode_image(self, image_path, bit_pos):
         img = Image.open(image_path)
