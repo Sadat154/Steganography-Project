@@ -1,3 +1,3 @@
 x = 'abcdef'
-print(x[:-2
-      ])
+y = x.find('b')
+print(x[1:4])
