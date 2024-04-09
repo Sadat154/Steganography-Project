@@ -179,7 +179,7 @@ if __name__ == '__main__':
     base_filepath = obtain_filepath()
     image_names = [['Colourful','jpg'],['SimilarColours','jpg'],['GreyScale','webp']]
     #BitSub_Images = generate_bitsub_images(base_filepath, image_names)
-    #DCT_Images = generate_dct_images(base_filepath, image_names)
+    DCT_Images = generate_dct_images(base_filepath, image_names)
     #Image generation complete
     #create_html_for_images(base_filepath)
     # x = sorted(os.listdir(f'{base_filepath}/ModifiedImages/DCTModifiedImages'))

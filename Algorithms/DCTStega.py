@@ -28,9 +28,9 @@ class DCTSteg:
         self.height = self.original_image.size[1]
         self.width = self.original_image.size[0]
         self.channels = 3
-        self.secret_message = secret_message
+        self.secret_message = secret_message + "AEQXT"
         self.bit_position = bit_position
-        self.binary_message = self.message_to_bin(secret_message)
+        self.binary_message = self.message_to_bin(self.secret_message)
         self.channel_to_modify = channels_dict[channel.lower()]
         self.__DELIM = "%$£QXT"
 
@@ -115,6 +115,10 @@ class DCTSteg:
             for quantised_block in quantised_blocks
         ]
 
+        # Run the blocks through inverse DCT
+
+        updated_blocks = [cv2.idct(B) + 128 for B in quantised_blocks]
+
         updated_channel = []
 
         for chunkRowBlocks in self.chunks(
@@ -178,10 +182,11 @@ class DCTSteg:
             blue_channel[j : j + 8, i : i + 8] - 128
             for (j, i) in itertools.product(range(0, row, 8), range(0, column, 8))
         ]
+        dct_blocks = [np.round(cv2.dct(image_block)) for image_block in image_blocks]
 
         # run 8x8 blocks through the quantisation table
         quantised_blocks = [
-            image_block / quantisation_table for image_block in image_blocks
+            image_block / quantisation_table for image_block in dct_blocks
         ]
 
         dec_value = 0  # Will be used to store the decimal value of a character
@@ -199,13 +204,15 @@ class DCTSteg:
             elif DC_coeff[bit_pos] == 0:
                 dec_value += (1 & 1) << (7 - i)
             i += 1
+
             if i == 8:
                 finalMsg += chr(dec_value)
+                print(finalMsg)
                 i = 0
                 dec_value = 0
                 # Now we want to check if delimiter has been reached so that we can end the decoding process
-                if self.__DELIM in finalMsg:
-                    return finalMsg[: -(len(self.__DELIM))]
+                if "AEQXT" in finalMsg:
+                    return finalMsg[: -(len("AEQXT"))]
 
     def chunks(
         self, currentlist, n
@@ -216,3 +223,11 @@ class DCTSteg:
 
 
 # BitChoice = 8 # 0 = MSB, 7 = LSB
+
+
+X= DCTSteg("C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/Testasdasdas.webp","C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/Colourful1.png", "HisA",1,'b')
+X.encode_image()
+print(X.decode_image("C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/Colourful1.png",1))
+#Problem with code, if the image is not a multiple of 8 width/lengthwise data is lost! need to somehow correct this
+#Have changes alot of stuff in code pls dont forget to fix
+#Crurrently decode does not work with green or red chanhnels, need to fgix this
