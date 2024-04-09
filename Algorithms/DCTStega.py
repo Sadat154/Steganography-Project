@@ -23,16 +23,17 @@ quantisation_table = np.array(
 
 class DCTSteg:
     def __init__(self, original_image_path, encoded_image_path, secret_message, bit_position, channel):
+        self.DELIM = "%$£QXT"
         self.original_image = Image.open(original_image_path)
         self.encoded_image_path = encoded_image_path
         self.height = self.original_image.size[1]
         self.width = self.original_image.size[0]
         self.channels = 3
-        self.secret_message = secret_message + "AEQXT"
+        self.secret_message = secret_message + self.DELIM
         self.bit_position = bit_position
         self.binary_message = self.message_to_bin(self.secret_message)
         self.channel_to_modify = channels_dict[channel.lower()]
-        self.__DELIM = "%$£QXT"
+
 
 
 
@@ -46,11 +47,9 @@ class DCTSteg:
         new_width = width + (8 - (width % 8)) if width % 8 != 0 else width
 
         # Resize image to a multiple of 8
-        resized_image = Image.new("RGB", (new_width, new_height), (0, 0, 0))
-        resized_image.paste(img, (0, 0))
-
+        resized_image = img.resize((new_width, new_height))
         return resized_image, new_height, new_width
-
+    #https://www.youtube.com/watch?v=o3En6vAO7OY&list=PLH42YHDxfBrKnEd3n6JGdWScU01a6FCyI&index=6
     def adjust_bitmask(self, bitpos):
 
         bitchoice = bitpos + 1
@@ -73,7 +72,7 @@ class DCTSteg:
         img = np.array(resized_img)
 
 
-        # Hide message in the blue channel so we need to separate it
+        # Hide message in the chosen channel so we need to separate it
         current_channel = img[:, :, self.channel_to_modify]
 
         # Convert channel to type float 32 for dct function
@@ -92,7 +91,6 @@ class DCTSteg:
         quantised_blocks = [
             np.round(dct_block / quantisation_table) for dct_block in dct_blocks
         ]
-
         # Encoding a bit in the chosen bit
         message_index = 0
         for quantised_block in quantised_blocks:  # Iterate through the blocks
@@ -163,25 +161,26 @@ class DCTSteg:
         final_img = Image.merge("RGB", (red_img, green_img, blue_img))
         final_img.save(self.encoded_image_path)
 
-    def decode_image(self, image_path, bit_pos):
-        img = Image.open(image_path)
+    def decode_image(self):
+        img = Image.open(self.encoded_image_path)
         img, row, column = self.resize_image(
             img
         )  # Row, Column remains unchanged, however image changes
 
         img = np.array(img)
 
-        # Obtain blue channel as this was the channel that was modified
-        blue_channel = img[:, :, 2]
+        # Obtain chosen channel as this was the channel that was modified
+        current_channel = img[:, :, self.channel_to_modify]
 
         # Convert to float32 for dct function
-        blue_channel = np.float32(blue_channel)
+        current_channel = np.float32(current_channel)
 
         # break into 8x8 blocks
         image_blocks = [
-            blue_channel[j : j + 8, i : i + 8] - 128
+            current_channel[j : j + 8, i : i + 8] - 128
             for (j, i) in itertools.product(range(0, row, 8), range(0, column, 8))
         ]
+
         dct_blocks = [np.round(cv2.dct(image_block)) for image_block in image_blocks]
 
         # run 8x8 blocks through the quantisation table
@@ -198,21 +197,20 @@ class DCTSteg:
             DC_coeff = np.uint8(DC_coeff)
             DC_coeff = np.unpackbits(DC_coeff)
 
-            if DC_coeff[bit_pos] == 1:
+            if DC_coeff[self.bit_position] == 1:
                 dec_value += (0 & 1) << (7 - i)
 
-            elif DC_coeff[bit_pos] == 0:
+            elif DC_coeff[self.bit_position] == 0:
                 dec_value += (1 & 1) << (7 - i)
             i += 1
 
             if i == 8:
                 finalMsg += chr(dec_value)
-                print(finalMsg)
                 i = 0
                 dec_value = 0
                 # Now we want to check if delimiter has been reached so that we can end the decoding process
-                if "AEQXT" in finalMsg:
-                    return finalMsg[: -(len("AEQXT"))]
+                if self.DELIM in finalMsg:
+                    return finalMsg[: -(len(self.DELIM))]
 
     def chunks(
         self, currentlist, n
@@ -225,9 +223,9 @@ class DCTSteg:
 # BitChoice = 8 # 0 = MSB, 7 = LSB
 
 
-X= DCTSteg("C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/Testasdasdas.webp","C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/Colourful1.png", "HisA",1,'b')
+X= DCTSteg("C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/Colourful.jpg","C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/Colourful1.png", "HisA",1,'b')
 X.encode_image()
-print(X.decode_image("C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/Colourful1.png",1))
+print(X.decode_image())
 #Problem with code, if the image is not a multiple of 8 width/lengthwise data is lost! need to somehow correct this
 #Have changes alot of stuff in code pls dont forget to fix
 #Crurrently decode does not work with green or red chanhnels, need to fgix this
