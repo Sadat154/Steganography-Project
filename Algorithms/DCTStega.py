@@ -2,10 +2,9 @@ import itertools
 import cv2
 import numpy as np
 from PIL import Image
-
+from SteganographyAlgorithm import SteganographyAlgorithm
 
 channels_dict = {"r": 0, "g": 1, "b": 2}
-
 
 quantisation_table = np.array(
     [
@@ -20,52 +19,13 @@ quantisation_table = np.array(
     ]
 )
 
-
-class DCTSteg:
+class DCTSteg(SteganographyAlgorithm):
     def __init__(self, original_image_path, encoded_image_path, secret_message, bit_position, channel):
-        self.DELIM = "%$£QXT"
-        self.original_image = Image.open(original_image_path)
-        self.encoded_image_path = encoded_image_path
-        self.height = self.original_image.size[1]
-        self.width = self.original_image.size[0]
+        super().__init__()
         self.channels = 3
-        self.secret_message = secret_message + self.DELIM
-        self.bit_position = bit_position
+        self.secret_message = self.secret_message + self.DELIM
         self.binary_message = self.message_to_bin(self.secret_message)
         self.channel_to_modify = channels_dict[channel.lower()]
-
-
-
-
-
-    def message_to_bin(self, message):
-        binary_message = "".join(format(ord(char), "08b") for char in message)
-        return binary_message
-    def resize_image(self, img):
-        height, width = self.height, self.width
-        new_height = height + (8 - (height % 8)) if height % 8 != 0 else height
-        new_width = width + (8 - (width % 8)) if width % 8 != 0 else width
-
-        # Resize image to a multiple of 8
-        resized_image = img.resize((new_width, new_height))
-        return resized_image, new_height, new_width
-    #https://www.youtube.com/watch?v=o3En6vAO7OY&list=PLH42YHDxfBrKnEd3n6JGdWScU01a6FCyI&index=6
-    def adjust_bitmask(self, bitpos):
-
-        bitchoice = bitpos + 1
-        ans = 0
-        for i in range(0, (8 - bitchoice)):
-            logical_left_shift = 1 << (i)
-            ans += logical_left_shift
-
-        finalAns = 255 - ans
-
-        return finalAns
-
-    def check_message_length(self, height, width, message):
-        if (width / 8) * (height / 8) < len(message):
-            print("Error: Message too large to encode in image")
-            return False
 
     def encode_image(self):
         resized_img, row, column = self.resize_image(self.original_image)
@@ -212,16 +172,8 @@ class DCTSteg:
                 if self.DELIM in finalMsg:
                     return finalMsg[: -(len(self.DELIM))]
 
-    def chunks(
-        self, currentlist, n
-    ):  # Takes a list and splits it into chunks of size n
-        m = int(n)
-        for i in range(0, len(currentlist), m):
-            yield currentlist[i : i + m]
-
 
 # BitChoice = 8 # 0 = MSB, 7 = LSB
-
 
 X= DCTSteg("C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/Colourful.jpg","C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/Colourful1.png", "HisA",1,'b')
 X.encode_image()

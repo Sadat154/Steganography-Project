@@ -1,43 +1,17 @@
 from PIL import Image
+from SteganographyAlgorithm import SteganographyAlgorithm
 
-DELIM = "%$£QXT"
+DELIM = "%$Â£QXT"
 
-
-class BitEncoderDecoder:
+class BitEncoderDecoder(SteganographyAlgorithm):
     def __init__(
         self, original_image_path, encoded_image_path, secret_message, bit_position
     ):
-        self.original_image = Image.open(original_image_path)
-        self.encoded_image_path = (
-            encoded_image_path  # Where the encoded image shall be stored
-        )
-        self.bit_position = bit_position
+        super().__init__()
         self.number_of_channels = 3
         self.secret_message = secret_message
-        self.DELIM = "%$£QXT"
 
-    def message_to_bin(self, message):
-        binary_message = "".join(format(ord(char), "08b") for char in message)
-        return binary_message
-
-    def decimal_to_binary(self, decimal_value):
-        # Convert decimal to binary string
-        binary_string = bin(decimal_value)[2:]  # Remove '0b' prefix from binary string
-
-        # Pad the binary string with leading zeros if necessary to ensure it's 8 bits long
-        padded_binary_string = binary_string.zfill(8)
-
-        return padded_binary_string
-
-    def binary_to_decimal(self, binary_string):
-        # Convert binary string to decimal value
-        decimal_value = int(binary_string, 2)
-
-        return decimal_value
-
-    # Example usage:
-
-    def encode_bit(self):
+    def encode_image(self):
         original_image = self.original_image
         secret_message = (
             self.secret_message + self.DELIM
@@ -76,7 +50,7 @@ class BitEncoderDecoder:
 
         original_image.save(self.encoded_image_path)
 
-    def decode_bit(self):
+    def decode_image(self):
         encoded_image = Image.open(self.encoded_image_path)
 
         binary_message = ""
