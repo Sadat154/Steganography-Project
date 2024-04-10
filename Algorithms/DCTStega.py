@@ -226,6 +226,3 @@ class DCTSteg:
 X= DCTSteg("C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/Colourful.jpg","C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/Colourful1.png", "HisA",1,'b')
 X.encode_image()
 print(X.decode_image())
-#Problem with code, if the image is not a multiple of 8 width/lengthwise data is lost! need to somehow correct this
-#Have changes alot of stuff in code pls dont forget to fix
-#Crurrently decode does not work with green or red chanhnels, need to fgix this
