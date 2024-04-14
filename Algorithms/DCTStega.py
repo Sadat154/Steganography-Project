@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from PIL import Image
 from SteganographyAlgorithm import SteganographyAlgorithm
-
+import math
 channels_dict = {"r": 0, "g": 1, "b": 2}
 
 quantisation_table = np.array(
@@ -20,12 +20,31 @@ quantisation_table = np.array(
 )
 
 class DCTSteg(SteganographyAlgorithm):
-    def __init__(self, original_image_path, encoded_image_path, secret_message, bit_position, channel):
-        super().__init__()
+    def __init__(self, original_image_path,channel):
+        super().__init__(original_image_path)
         self.channels = 3
         self.secret_message = self.secret_message + self.DELIM
         self.binary_message = self.message_to_bin(self.secret_message)
         self.channel_to_modify = channels_dict[channel.lower()]
+
+    def dct_2d(self, image):
+        M, N = len(image), len(image[0])
+        image_dct = [[0.0] * N for _ in range(M)]
+
+        for p in range(M):
+            for q in range(N):
+                sum = 0.0
+                for m in range(M):
+                    for n in range(N):
+                        sum += image[m][n] * math.cos((2 * m + 1) * p * math.pi / (2 * M)) * math.cos((2 * n + 1) * q * math.pi / (2 * N))
+                image_dct[p][q] = sum * math.sqrt(4.0 / (M * N)) * (math.sqrt(1.0 / 2.0) if p == 0 else 1) * (
+                    math.sqrt(1.0 / 2.0) if q == 0 else 1)
+
+        return image_dct
+
+    # Now you can use this function to compute the DCT of an image block.
+    # For example, if `image` is your N x M image block:
+    # dct_image = dct_2d(image)
 
     def encode_image(self):
         resized_img, row, column = self.resize_image(self.original_image)
@@ -44,9 +63,11 @@ class DCTSteg(SteganographyAlgorithm):
             for (j, i) in itertools.product(range(0, row, 8), range(0, column, 8))
         ]
 
+        #x = [np.round(self.dct_2d(i)) for i in image_blocks]
+        #print(x)
         # Run the 8x8 blocks through the DCT function
         dct_blocks = [np.round(cv2.dct(image_block)) for image_block in image_blocks]
-
+        #print(dct_blocks)
         # Run the 8x8 blocks through the quantisation table
         quantised_blocks = [
             np.round(dct_block / quantisation_table) for dct_block in dct_blocks
@@ -175,6 +196,10 @@ class DCTSteg(SteganographyAlgorithm):
 
 # BitChoice = 8 # 0 = MSB, 7 = LSB
 
-X= DCTSteg("C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/Colourful.jpg","C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/Colourful1.png", "HisA",1,'b')
+X= DCTSteg("C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/Testasdasdas.webp",'b')
+X.original_image_path = "C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/Testasdasdas.webp"
+X.secret_message = "HisA"
+X.bit_position = 1
+
+#test = '"C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/Testasdasdas.webp","C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/yo.png", "HisA",1,'
 X.encode_image()
-print(X.decode_image())
