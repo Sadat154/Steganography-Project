@@ -73,11 +73,12 @@ def generate_dct_images(base_filepath, images_list):
                     DCT_Images_List.append(ImageObj)
     return DCT_Images_List
 
-def create_html_for_images(file_path):
+def create_html_for_images(file_path, image_names):
     images_per_row = 4 #This is a fixed value as we have generated images in which 25%,50%,75%,100% of the image has been modified
-    num_rows = (96 + 288)/4 #This equates to the number of images in the modifiedimagesfile / 4 as for each type of modification we have generated 4 images
-    #therefore for every 4 images, a row will be required
-    #First 24 Rows will be for bit substitution, remaining 72 for DCT
+    rows_bitsub = len(image_names)*8#For every image, we have a row for every bit position so 8 rows per image since 8 positions
+    rows_dct = len(image_names)*8*3
+    num_rows = rows_bitsub + rows_dct #This equates to the number of images in the modifiedimagesfile / 4 as for each type of modification we have generated 4 images
+
 
     BitSubFilePath = f'{file_path}/ModifiedImages/BitSubModifiedImages'
     all_bitsub_images = os.listdir(BitSubFilePath)
@@ -101,11 +102,11 @@ def create_html_for_images(file_path):
 
         ''')
 
-        # Loop through each row
-        for i in range(24):
+        # Loop through each row for bit sub
+        for i in range(rows_bitsub):
 
             #Find Bit Position
-            CurrentRow = all_bitsub_images[i::24] # In a given row, the bit position will be same for all the images
+            CurrentRow = all_bitsub_images[i::rows_bitsub] # In a given row, the bit position will be same for all the images
             #square_bracket = CurrentRow[0].find('[') # Using first image, could use any, using [ to find bit pos
             bit_position = CurrentRow[0][1 + CurrentRow[0].find('[')]
 
@@ -117,7 +118,7 @@ def create_html_for_images(file_path):
                 f.write(f'''
                 <div class="column">
                     <div class="image-container">
-                        <img src="/{BitSubFilePath}/{all_bitsub_images[i::24][j-1]}" width="100%;">
+                        <img src="/{BitSubFilePath}/{all_bitsub_images[i::rows_bitsub][j-1]}" width="100%;">
                         <div class="text">{(j/4)*100}%</div>
                     </div>
                 </div>
@@ -138,9 +139,9 @@ def create_html_for_images(file_path):
             ''')
         DCTFilePath = f'{file_path}/ModifiedImages/DCTModifiedImages'
         all_dct_images = os.listdir(DCTFilePath)
-        for i in range(72):
+        for i in range(rows_dct):
             #For a given row the bit position and the channel modified for all the images will be the same
-            CurrentRow = all_dct_images[i::72] # In a given row, the bit position will be same for all the images
+            CurrentRow = all_dct_images[i::rows_dct] # In a given row, the bit position will be same for all the images
             bit_position = CurrentRow[0][1 + CurrentRow[0].find('[')]
             channel = CurrentRow[0][CurrentRow[0].rfind('_')+1:CurrentRow[0].rfind('.')] #the channel name will be from the last '_' to the '.'
 
@@ -152,7 +153,7 @@ def create_html_for_images(file_path):
                 f.write(f'''
                 <div class="column">
                     <div class="image-container">
-                        <img src="/{DCTFilePath}/{all_dct_images[i::72][j-1]}" width="100%;">
+                        <img src="/{DCTFilePath}/{all_dct_images[i::rows_dct][j-1]}" width="100%;">
                         <div class="text">{(j/4)*100}%</div>
                     </div>
                 </div>
@@ -177,12 +178,20 @@ def create_html_for_images(file_path):
 
 if __name__ == '__main__':
     base_filepath = obtain_filepath()
-    image_names = [['Colourful','jpg'],['SimilarColours','jpg'],['GreyScale','webp']] #Can be changed by the user
-    print(len(image_names))
+    #image_names = [['Colourful','jpg'],['SimilarColours','jpg'],['GreyScale','webp']] #Can be changed by the user
+    image_names = os.listdir(f'{base_filepath}/OriginalImages')
+
+    #Need to implement it so the user can decide what algorithms a html file will be generated for
+
+
+
+
+
+    #print((image_names))
     #BitSub_Images = generate_bitsub_images(base_filepath, image_names)
     #DCT_Images = generate_dct_images(base_filepath, image_names)
     #Image generation complete
-    #create_html_for_images(base_filepath)
+    #create_html_for_images(base_filepath, image_names)
     # x = sorted(os.listdir(f'{base_filepath}/ModifiedImages/DCTModifiedImages'))
     # print(x[1::72])
     # for i in range(24):

@@ -195,11 +195,3 @@ class DCTSteg(SteganographyAlgorithm):
 
 
 # BitChoice = 8 # 0 = MSB, 7 = LSB
-
-X= DCTSteg("C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/Testasdasdas.webp",'b')
-X.original_image_path = "C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/Testasdasdas.webp"
-X.secret_message = "HisA"
-X.bit_position = 1
-
-#test = '"C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/Testasdasdas.webp","C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/OriginalImages/yo.png", "HisA",1,'
-X.encode_image()
