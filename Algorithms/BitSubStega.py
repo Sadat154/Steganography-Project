@@ -3,12 +3,13 @@ from SteganographyAlgorithm import SteganographyAlgorithm
 
 DELIM = "%$Â£QXT"
 
-class BitEncoderDecoder(SteganographyAlgorithm):
+
+class BitSubEncoderDecoder(SteganographyAlgorithm):
     def __init__(
         self, original_image_path, encoded_image_path, secret_message, bit_position
-    ):
+    ):  # NEed to fix the super thingy here as well
         super().__init__()
-        self.number_of_channels = 3
+        self.channels = 3
         self.secret_message = secret_message
 
     def encode_image(self):
@@ -19,7 +20,7 @@ class BitEncoderDecoder(SteganographyAlgorithm):
         binary_message = self.message_to_bin(secret_message)
         if (
             len(binary_message)
-            > self.number_of_channels * original_image.size[0] * original_image.size[1]
+            > self.channels * original_image.size[0] * original_image.size[1]
         ):
             raise ValueError("Message is too long to be encoded in the image")
 
@@ -29,7 +30,7 @@ class BitEncoderDecoder(SteganographyAlgorithm):
                 pixel = list(original_image.getpixel((x, y)))
                 pixellist_to_binary = [self.decimal_to_binary(i) for i in pixel]
 
-                for i in range(self.number_of_channels):
+                for i in range(self.channels):
                     if data_index < len(binary_message):
 
                         pixel_binary = list(

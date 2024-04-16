@@ -1,8 +1,10 @@
 from pathlib import Path
 from PIL import Image
 
+
 class MessageTooLargeError(Exception):
     pass
+
 
 class SteganographyAlgorithm:
     def __init__(
@@ -47,12 +49,13 @@ class SteganographyAlgorithm:
         decimal_value = int(binary_string, 2)
         return decimal_value
 
-    def check_message_length(self, height, width, message): # DCT check need to implement for LSB too as criteria different
+    def check_message_length_DCT(self, height, width, message):
         total = (width / 8) * (height / 8)
         length = len(message)
         if total < length:
-            raise MessageTooLargeError (f"Message ({length}) is too large to encode in the image ({total})")
-
+            raise MessageTooLargeError(
+                f"Message ({length}) is too large to be encode in the image ({total})"
+            )
 
     def chunks(
         self, currentlist, n
@@ -69,7 +72,8 @@ class SteganographyAlgorithm:
         # Resize image to a multiple of 8
         resized_image = img.resize((new_width, new_height))
         return resized_image, new_height, new_width
-    #https://www.youtube.com/watch?v=o3En6vAO7OY&list=PLH42YHDxfBrKnEd3n6JGdWScU01a6FCyI&index=6
+
+    # https://www.youtube.com/watch?v=o3En6vAO7OY&list=PLH42YHDxfBrKnEd3n6JGdWScU01a6FCyI&index=6
     def adjust_bitmask(self, bitpos):
 
         bitchoice = bitpos + 1

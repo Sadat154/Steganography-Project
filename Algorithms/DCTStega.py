@@ -4,11 +4,21 @@ import numpy as np
 from PIL import Image
 from SteganographyAlgorithm import SteganographyAlgorithm
 import math
+
 channels_dict = {"r": 0, "g": 1, "b": 2}
 
 quantisation_table = np.array(
     [
-        [16, 11, 10, 16, 24, 40, 51, 61,],  # Luminance (Y) Quantization Table (Standard Quality)
+        [
+            16,
+            11,
+            10,
+            16,
+            24,
+            40,
+            51,
+            61,
+        ],  # Luminance (Y) Quantization Table (Standard Quality)
         [12, 12, 14, 19, 26, 58, 60, 55],
         [14, 13, 16, 24, 40, 57, 69, 56],
         [14, 17, 22, 29, 51, 87, 80, 62],
@@ -19,37 +29,68 @@ quantisation_table = np.array(
     ]
 )
 
+
 class DCTSteg(SteganographyAlgorithm):
-    def __init__(self, original_image_path,channel):
+    def __init__(self, original_image_path, channel):
         super().__init__(original_image_path)
         self.channels = 3
         self.secret_message = self.secret_message + self.DELIM
+        self.check_message_length_DCT(
+            self.original_image.size[1],
+            self.original_image.size[0],
+            self.secret_message,
+        )
         self.binary_message = self.message_to_bin(self.secret_message)
         self.channel_to_modify = channels_dict[channel.lower()]
 
-    def dct_2d(self, image):
-        M, N = len(image), len(image[0])
-        image_dct = [[0.0] * N for _ in range(M)]
+    def dct(self, image_block):
+        M, N = len(image_block), len(image_block[0])
+        dct_block = [[0.0] * N for _ in range(M)]
 
-        for p in range(M):
-            for q in range(N):
+        for u in range(M):
+            for v in range(N):
                 sum = 0.0
-                for m in range(M):
-                    for n in range(N):
-                        sum += image[m][n] * math.cos((2 * m + 1) * p * math.pi / (2 * M)) * math.cos((2 * n + 1) * q * math.pi / (2 * N))
-                image_dct[p][q] = sum * math.sqrt(4.0 / (M * N)) * (math.sqrt(1.0 / 2.0) if p == 0 else 1) * (
-                    math.sqrt(1.0 / 2.0) if q == 0 else 1)
+                for x in range(M):
+                    for y in range(N):
+                        sum += (
+                            image_block[x][y]
+                            * math.cos((2 * x + 1) * u * math.pi / (2 * M))
+                            * math.cos((2 * y + 1) * v * math.pi / (2 * N))
+                        )
+                coef = math.sqrt(2 / M) * math.sqrt(2 / N)
+                if u == 0:
+                    coef *= 1 / math.sqrt(2)
+                if v == 0:
+                    coef *= 1 / math.sqrt(2)
+                dct_block[u][v] = coef * sum
+        return dct_block
 
-        return image_dct
+    def idct(self, dct_block):
+        M, N = len(dct_block), len(dct_block[0])
+        image_block = [[0.0] * N for _ in range(M)]
 
-    # Now you can use this function to compute the DCT of an image block.
-    # For example, if `image` is your N x M image block:
-    # dct_image = dct_2d(image)
+        for x in range(M):
+            for y in range(N):
+                sum = 0.0
+                for u in range(M):
+                    for v in range(N):
+                        coef = 1.0
+                        if u == 0:
+                            coef *= 1 / math.sqrt(2)
+                        if v == 0:
+                            coef *= 1 / math.sqrt(2)
+                        sum += (
+                            coef
+                            * dct_block[u][v]
+                            * math.cos((2 * x + 1) * u * math.pi / (2 * M))
+                            * math.cos((2 * y + 1) * v * math.pi / (2 * N))
+                        )
+                image_block[x][y] = 4 * sum / (M * N)
+        return image_block
 
     def encode_image(self):
         resized_img, row, column = self.resize_image(self.original_image)
         img = np.array(resized_img)
-
 
         # Hide message in the chosen channel so we need to separate it
         current_channel = img[:, :, self.channel_to_modify]
@@ -63,11 +104,11 @@ class DCTSteg(SteganographyAlgorithm):
             for (j, i) in itertools.product(range(0, row, 8), range(0, column, 8))
         ]
 
-        #x = [np.round(self.dct_2d(i)) for i in image_blocks]
-        #print(x)
+        # x = [np.round(self.dct_2d(i)) for i in image_blocks]
+        # print(x)
         # Run the 8x8 blocks through the DCT function
         dct_blocks = [np.round(cv2.dct(image_block)) for image_block in image_blocks]
-        #print(dct_blocks)
+        # print(dct_blocks)
         # Run the 8x8 blocks through the quantisation table
         quantised_blocks = [
             np.round(dct_block / quantisation_table) for dct_block in dct_blocks
@@ -114,30 +155,43 @@ class DCTSteg(SteganographyAlgorithm):
         # Blue channel currently in float32 format, need to convert
         updated_channel = np.uint8(updated_channel)
 
-        original_rows = self.height
-        original_columns = self.width
+        # original_rows = self.height
+        # original_columns = self.width
 
+        # Need to
         if self.channel_to_modify == 1:  # Green channel has been modified, rest same
-            blue_img = Image.fromarray(img[:, :, 2][:original_rows, :original_columns])
-            red_img = Image.fromarray(img[:, :, 0][:original_rows, :original_columns])
-            green_img = Image.fromarray(
-                updated_channel[:original_rows, :original_columns]
-            )
+            blue_img = Image.fromarray(
+                img[:, :, 2]
+            )  # [:original_rows, :original_columns])
+            red_img = Image.fromarray(
+                img[:, :, 0]
+            )  # [:original_rows, :original_columns])
+            green_img = Image.fromarray(updated_channel)
         elif (
             self.channel_to_modify == 2
         ):  # Blue channel has been modified rest stay the same
             blue_img = Image.fromarray(
-                updated_channel[:original_rows, :original_columns]
-            )
-            red_img = Image.fromarray(img[:, :, 0][:original_rows, :original_columns])
-            green_img = Image.fromarray(img[:, :, 1][:original_rows, :original_columns])
+                updated_channel
+            )  # [:original_rows, :original_columns]
+
+            red_img = Image.fromarray(
+                img[:, :, 0]
+            )  # [:original_rows, :original_columns])
+            green_img = Image.fromarray(
+                img[:, :, 1]
+            )  # [:original_rows, :original_columns])
 
         else:  # Red channel has been modified the rest stay the same
-            blue_img = Image.fromarray(img[:, :, 2][:original_rows, :original_columns])
+            blue_img = Image.fromarray(
+                img[:, :, 2]
+            )  # [:original_rows, :original_columns])
             red_img = Image.fromarray(
-                updated_channel[:original_rows, :original_columns]
-            )
-            green_img = Image.fromarray(img[:, :, 1][:original_rows, :original_columns])
+                updated_channel
+            )  # [:original_rows, :original_columns]
+
+            green_img = Image.fromarray(
+                img[:, :, 1]
+            )  # [:original_rows, :original_columns])
 
         final_img = Image.merge("RGB", (red_img, green_img, blue_img))
         final_img.save(self.encoded_image_path)
@@ -195,3 +249,7 @@ class DCTSteg(SteganographyAlgorithm):
 
 
 # BitChoice = 8 # 0 = MSB, 7 = LSB
+#
+# X = DCTSteg("C:\\Users\\naf15\\OneDrive\\Desktop\\Python_Projects\\Steganography-Project\\OriginalImages\\Colourful.jpg", 'b')
+# X.encoded_image_path = "Yo.png"
+# X.encode_image()
