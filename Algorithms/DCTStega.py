@@ -31,8 +31,8 @@ quantisation_table = np.array(
 
 
 class DCTSteg(SteganographyAlgorithm):
-    def __init__(self, original_image_path, channel):
-        super().__init__(original_image_path)
+    def __init__(self, original_image_path, output_image_path, secret_message, bit_position,channel):
+        super().__init__(original_image_path, output_image_path, secret_message, bit_position,channel)
         self.channels = 3
         self.secret_message = self.secret_message + self.DELIM
         self.check_message_length_DCT(
@@ -247,9 +247,3 @@ class DCTSteg(SteganographyAlgorithm):
                 if self.DELIM in finalMsg:
                     return finalMsg[: -(len(self.DELIM))]
 
-
-# BitChoice = 8 # 0 = MSB, 7 = LSB
-#
-# X = DCTSteg("C:\\Users\\naf15\\OneDrive\\Desktop\\Python_Projects\\Steganography-Project\\OriginalImages\\Colourful.jpg", 'b')
-# X.encoded_image_path = "Yo.png"
-# X.encode_image()

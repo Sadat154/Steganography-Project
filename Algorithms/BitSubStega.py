@@ -8,7 +8,7 @@ class BitSubEncoderDecoder(SteganographyAlgorithm):
     def __init__(
         self, original_image_path, encoded_image_path, secret_message, bit_position
     ):  # NEed to fix the super thingy here as well
-        super().__init__()
+        super().__init__(original_image_path, encoded_image_path, secret_message, bit_position)
         self.channels = 3
         self.secret_message = secret_message
 
@@ -22,6 +22,8 @@ class BitSubEncoderDecoder(SteganographyAlgorithm):
             len(binary_message)
             > self.channels * original_image.size[0] * original_image.size[1]
         ):
+            print(len(binary_message))
+            print(self.channels * original_image.size[0] * original_image.size[1])
             raise ValueError("Message is too long to be encoded in the image")
 
         data_index = 0

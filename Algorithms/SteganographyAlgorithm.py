@@ -16,9 +16,10 @@ class SteganographyAlgorithm:
         channel: str = "",
     ):
         self.DELIM = "%$Â£QXT"
-        self.original_image = self.open_image(original_image_path)
-        self.height = self.original_image.size[1]
-        self.width = self.original_image.size[0]
+        if original_image_path is not None:
+            self.original_image = self.open_image(original_image_path)
+            self.height = self.original_image.size[1]
+            self.width = self.original_image.size[0]
         self.encoded_image_path = encoded_image_path
         self.secret_message = secret_message
         self.bit_position = bit_position
@@ -37,7 +38,9 @@ class SteganographyAlgorithm:
         binary_message = "".join(format(ord(char), "08b") for char in message)
         return binary_message
 
-    def decimal_to_binary(self, decimal_value):
+    def decimal_to_binary(self, decimal_value): #Only for positive decimal values
+        if decimal_value < 0:
+            raise ValueError()
         # Convert decimal to binary string
         binary_string = bin(decimal_value)[2:]  # Remove '0b' prefix from binary string
         # Pad the binary string with leading zeros if necessary to ensure it's 8 bits long
@@ -61,11 +64,14 @@ class SteganographyAlgorithm:
         self, currentlist, n
     ):  # Takes a list and splits it into chunks of size n
         m = int(n)
+        if m < 0:
+            raise ValueError()
         for i in range(0, len(currentlist), m):
             yield currentlist[i : i + m]
 
     def resize_image(self, img):
-        height, width = self.height, self.width
+        #height, width = self.height, self.width
+        height, width = img.size
         new_height = height + (8 - (height % 8)) if height % 8 != 0 else height
         new_width = width + (8 - (width % 8)) if width % 8 != 0 else width
 
@@ -75,6 +81,8 @@ class SteganographyAlgorithm:
 
     # https://www.youtube.com/watch?v=o3En6vAO7OY&list=PLH42YHDxfBrKnEd3n6JGdWScU01a6FCyI&index=6
     def adjust_bitmask(self, bitpos):
+        if bitpos < 0:
+            raise ValueError()
 
         bitchoice = bitpos + 1
         ans = 0
