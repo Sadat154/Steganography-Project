@@ -3,6 +3,9 @@ from PIL import Image
 import os
 from SteganographyAlgorithm import SteganographyAlgorithm
 
+
+class MessageTooLargeError(Exception):
+    pass
 class TestSteganographyAlgorithm(unittest.TestCase):
     def setUp(self):
         self.steg_algo = SteganographyAlgorithm()
@@ -197,6 +200,35 @@ class TestAdjustBitmask(unittest.TestCase):
 
 ################ADJUST_BITMASK####################
 
+############CHECK MESSAGE LENGTH##################
+class TestCheckMessageLengthDCT(unittest.TestCase):
+    def setUp(self):
+        self.check_message_length_DCT = SteganographyAlgorithm().check_message_length_DCT
+
+    def test_message_fits(self):
+        try:
+            self.check_message_length_DCT(64, 64, 'Hello World') #Expected
+        except MessageTooLargeError:
+            self.fail('MessageTooLargeError raised unexpectedly!')
+
+    def test_message_too_large(self): #Invalid # Need to ask sir to help me with this as it is a custom exception
+        with self.assertRaises(MessageTooLargeError):
+            self.check_message_length_DCT(64, 64, 'This message is definitely too long to fit in the image, because it is just too large to fit in the image!')
+
+    def test_zero_dimensions(self):#Boundary # Need help with this too
+        with self.assertRaises(MessageTooLargeError):
+            self.check_message_length_DCT(0, 0, 'Any message')
+
+    def test_non_integer_dimensions(self):
+        with self.assertRaises(TypeError):
+            self.check_message_length_DCT('abc', 64, 'Any message')
+
+        with self.assertRaises(TypeError):
+            self.check_message_length_DCT(64, 'abc', 'Any message')
+
+    def test_non_string_message(self):
+        with self.assertRaises(TypeError):
+            self.check_message_length_DCT(64, 64, 123)
 
 
 
