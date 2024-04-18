@@ -7,7 +7,7 @@ class TestSteganographyAlgorithm(unittest.TestCase):
     def setUp(self):
         self.steg_algo = SteganographyAlgorithm()
 
-#################################################CHUNKS TESTING#########################################
+#################################################Chunks#########################################
     def test_chunks_with_valid_input(self):
         result = list(self.steg_algo.chunks([1, 2, 3, 4, 5, 6, 7, 8], 2))
         self.assertEqual(result, [[1, 2], [3, 4], [5, 6], [7, 8]])
@@ -28,10 +28,10 @@ class TestSteganographyAlgorithm(unittest.TestCase):
         with self.assertRaises(ValueError):
             list(self.steg_algo.chunks([1, 2, 3], -1))
 
-#################################################CHUNKS TESTING#########################################
+#################################################Chunks#########################################
 
 
-########################MESSAGE_TO_BIN TESTING#########################################
+#################################################Message_To_Bin#########################################
 class TestMessageToBin(unittest.TestCase):
     def setUp(self):
         self.message_to_bin = SteganographyAlgorithm().message_to_bin
@@ -49,10 +49,10 @@ class TestMessageToBin(unittest.TestCase):
         with self.assertRaises(TypeError):
             self.message_to_bin(123)
 
-########################MESSAGE_TO_BIN TESTING#########################################
+#################################################Message_To_Bin#########################################
 
 
-##################OPEN_IMAGE TEST######################
+##################Open_Image######################
 
 
 class TestOpenImage(unittest.TestCase):
@@ -87,9 +87,9 @@ class TestOpenImage(unittest.TestCase):
 
         # Clean up the test file
         os.remove('test_file.txt')
-###########################OPEN IMAGE TEST#######################
+##################Open_Image######################
 
-########################DEC TO BIN######################
+########################DEC_TO_BIN######################
 class TestDecimalToBinary(unittest.TestCase):
     def setUp(self):
         self.decimal_to_binary = SteganographyAlgorithm().decimal_to_binary
@@ -110,14 +110,13 @@ class TestDecimalToBinary(unittest.TestCase):
     def test_non_integer_input(self):
         with self.assertRaises(TypeError):
             self.decimal_to_binary('abc')
-########################DEC TO BIN######################
+########################DEC_TO_BIN######################
 
 
 
 
 
-
-########################BIN TO DEC######################
+########################BIN_TO_DEC######################
 class TestBinaryToDecimal(unittest.TestCase):
     def setUp(self):
         self.binary_to_decimal = SteganographyAlgorithm().binary_to_decimal
@@ -139,19 +138,10 @@ class TestBinaryToDecimal(unittest.TestCase):
         with self.assertRaises(TypeError):
             self.binary_to_decimal(123)
 
-########################BIN TO DEC######################
+########################BIN_TO_DEC######################
 
 
-###############check_message_length_DCT################
-"""WIP WILL MOST LIKELY HAVE TO DO THIS IN VIDEO"""
-#################check_message_length_DCT##############
-
-
-
-
-
-
-############################resize_image test#########
+########################RESIZE_IMAGE####################
 class TestResizeImage(unittest.TestCase):
     def setUp(self):
         self.resize_image = SteganographyAlgorithm().resize_image
@@ -171,7 +161,8 @@ class TestResizeImage(unittest.TestCase):
     def test_non_image_input(self):
         with self.assertRaises(AttributeError):
             self.resize_image('not an image')
-############################resize_image tes##########
+
+########################RESIZE_IMAGE####################
 
 
 
@@ -182,7 +173,7 @@ class TestResizeImage(unittest.TestCase):
 
 
 
-################adjust_bitmask test###################
+################ADJUST_BITMASK####################
 class TestAdjustBitmask(unittest.TestCase):
     def setUp(self):
         self.adjust_bitmask = SteganographyAlgorithm().adjust_bitmask
@@ -203,7 +194,8 @@ class TestAdjustBitmask(unittest.TestCase):
     def test_non_integer_input(self):
         with self.assertRaises(TypeError):
             self.adjust_bitmask('abc')
-###############adjust_bitmask test####################
+
+################ADJUST_BITMASK####################
 
 
 

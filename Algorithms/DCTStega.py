@@ -89,6 +89,7 @@ class DCTSteg(SteganographyAlgorithm):
         return image_block
 
     def encode_image(self):
+        self.check_message_length_DCT(self.height,self.width, self.secret_message)
         resized_img, row, column = self.resize_image(self.original_image)
         img = np.array(resized_img)
 

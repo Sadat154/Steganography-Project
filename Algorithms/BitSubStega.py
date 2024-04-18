@@ -7,7 +7,7 @@ DELIM = "%$Â£QXT"
 class BitSubEncoderDecoder(SteganographyAlgorithm):
     def __init__(
         self, original_image_path, encoded_image_path, secret_message, bit_position
-    ):  # NEed to fix the super thingy here as well
+    ):
         super().__init__(original_image_path, encoded_image_path, secret_message, bit_position)
         self.channels = 3
         self.secret_message = secret_message

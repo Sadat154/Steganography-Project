@@ -99,3 +99,4 @@ class SteganographyAlgorithm:
 
     def decode_image(self):
         pass
+
