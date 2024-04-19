@@ -272,13 +272,4 @@ if __name__ == "__main__":
 
     #IMPORTANT NEED TO ADD THE HOVER THING TO HTML
 
-    # print((image_names))
-    # BitSub_Images = generate_bitsub_images(base_filepath, image_names)
-    # DCT_Images = generate_dct_images(base_filepath, image_names)
-    # Image generation complete
-    # create_html_for_images(base_filepath, image_names)
-    # x = sorted(os.listdir(f'{base_filepath}/ModifiedImages/DCTModifiedImages'))
-    # print(x[1::72])
-    # for i in range(24):
-    #
-    #     print(x[i::24])
+

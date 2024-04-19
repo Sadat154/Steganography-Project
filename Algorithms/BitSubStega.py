@@ -22,9 +22,12 @@ class BitSubEncoderDecoder(SteganographyAlgorithm):
             len(binary_message)
             > self.channels * original_image.size[0] * original_image.size[1]
         ):
-            print(len(binary_message))
-            print(self.channels * original_image.size[0] * original_image.size[1])
+            # print(len(binary_message))
+            # print(self.channels * original_image.size[0] * original_image.size[1])
             raise ValueError("Message is too long to be encoded in the image")
+        # else:
+        #     print(len(binary_message))
+        #     print(self.channels * original_image.size[0] * original_image.size[1])
 
         data_index = 0
         for y in range(original_image.size[1]):
@@ -52,6 +55,7 @@ class BitSubEncoderDecoder(SteganographyAlgorithm):
                 original_image.putpixel((x, y), tuple(pixel))
 
         original_image.save(self.encoded_image_path)
+
 
     def decode_image(self):
         encoded_image = Image.open(self.encoded_image_path)
