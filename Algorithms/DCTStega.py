@@ -35,11 +35,11 @@ class DCTSteg(SteganographyAlgorithm):
         super().__init__(original_image_path, output_image_path, secret_message, bit_position,channel)
         self.channels = 3
         self.secret_message = self.secret_message + self.DELIM
-        self.check_message_length_DCT(
-            self.original_image.size[1],
-            self.original_image.size[0],
-            self.secret_message,
-        )
+        # self.check_message_length_DCT(
+        #     self.original_image.size[1],
+        #     self.original_image.size[0],
+        #     self.secret_message,
+        # )
         self.binary_message = self.message_to_bin(self.secret_message)
         self.channel_to_modify = channels_dict[channel.lower()]
 
@@ -109,11 +109,12 @@ class DCTSteg(SteganographyAlgorithm):
         # print(x)
         # Run the 8x8 blocks through the DCT function
         dct_blocks = [np.round(cv2.dct(image_block)) for image_block in image_blocks]
-        # print(dct_blocks)
+        #print(dct_blocks)
         # Run the 8x8 blocks through the quantisation table
         quantised_blocks = [
             np.round(dct_block / quantisation_table) for dct_block in dct_blocks
         ]
+        #print(quantised_blocks)
         # Encoding a bit in the chosen bit
         message_index = 0
         for quantised_block in quantised_blocks:  # Iterate through the blocks
@@ -130,15 +131,21 @@ class DCTSteg(SteganographyAlgorithm):
             message_index += 1
             if message_index == len(self.binary_message):
                 break
+
         # Run the blocks inversely through the quantisation table
         updated_blocks = [
             quantised_block * quantisation_table + 128
             for quantised_block in quantised_blocks
         ]
 
+
+
         # Run the blocks through inverse DCT
 
-        updated_blocks = [cv2.idct(B) + 128 for B in quantised_blocks]
+        # updated_blocks = [cv2.idct(B) + 128 for B in updated_blocks] #sdas
+
+
+
 
         updated_channel = []
 
@@ -149,7 +156,7 @@ class DCTSteg(SteganographyAlgorithm):
                 for block in chunkRowBlocks:  # For each item in the chunk
                     updated_channel.extend(
                         block[rowBlockNum]
-                    )  # Update the blue channel
+                    )  # Update the modified channel
 
         # Shape array into correct format such that it can be converted back into an image using PIL
         updated_channel = np.array(updated_channel).reshape(row, column)
@@ -199,9 +206,7 @@ class DCTSteg(SteganographyAlgorithm):
 
     def decode_image(self):
         img = Image.open(self.encoded_image_path)
-        img, row, column = self.resize_image(
-            img
-        )  # Row, Column remains unchanged, however image changes
+        resized_img, row, column = self.resize_image(self.original_image) # Here resized_img is never used
 
         img = np.array(img)
 
@@ -217,17 +222,18 @@ class DCTSteg(SteganographyAlgorithm):
             for (j, i) in itertools.product(range(0, row, 8), range(0, column, 8))
         ]
 
-        dct_blocks = [np.round(cv2.dct(image_block)) for image_block in image_blocks]
+        # Run through DCT
+        # dct_blocks = [np.round(cv2.dct(image_block)) for image_block in image_blocks]
+        # We dont inverse DCT the image meaning the image is already in the frequency domain so no need to run through inverse DCT
 
         # run 8x8 blocks through the quantisation table
         quantised_blocks = [
-            image_block / quantisation_table for image_block in dct_blocks
+            image_block / quantisation_table for image_block in image_blocks
         ]
 
         dec_value = 0  # Will be used to store the decimal value of a character
         finalMsg = ""
         i = 0
-
         for quantised_block in quantised_blocks:
             DC_coeff = quantised_block[0][0]
             DC_coeff = np.uint8(DC_coeff)
@@ -246,5 +252,10 @@ class DCTSteg(SteganographyAlgorithm):
                 dec_value = 0
                 # Now we want to check if delimiter has been reached so that we can end the decoding process
                 if self.DELIM in finalMsg:
+
                     return finalMsg[: -(len(self.DELIM))]
 
+
+
+# X = DCTSteg("TestingImage.jpg", "DCTWORK.png", "BLUDCLART", 4, 'g') # Only works from 4 onwards aka bit 5,6,7,8
+# X.encode_image()

@@ -97,7 +97,7 @@ channel_choice = 'r' # The channel chosen does not matter for the purpose of tes
 
 secret_message = "Hello World!" #Expected
 output_image_path = "TestingOutput/2.1.png"
-image_object = DCTSteg(testing_image_path, output_image_path, secret_message,bit_position)
+image_object = DCTSteg(testing_image_path, output_image_path, secret_message,bit_position, channel_choice)
 try:
     image_object.encode_image()
     print("2.1 Completed")
@@ -108,9 +108,9 @@ except:
 
 ### Test: 2.2 ###
 
-secret_message = "A" * math.trunc((((maximum_chars - 8*len(DELIM)))/8)) #This is the max characters that can be embedded into the TestingImage
+secret_message = "A" * math.trunc(maximum_DCT_chars-len(DELIM)) #This is the max characters that can be embedded into the TestingImage
 output_image_path = "TestingOutput/2.2.png"
-image_object = DCTSteg(testing_image_path, output_image_path, secret_message,bit_position)
+image_object = DCTSteg(testing_image_path, output_image_path, secret_message,bit_position, channel_choice)
 try:
     image_object.encode_image()
     print("2.2 Completed")
@@ -122,23 +122,25 @@ except:
 
 secret_message = "Computer Science"
 output_image_path = "TestingOutput/2.3.png"
-image_object = DCTSteg(testing_image_path, output_image_path, secret_message,bit_position)
+image_object = DCTSteg(testing_image_path, output_image_path, secret_message,bit_position, 'b')
 image_object.encode_image()
 
 output_message = image_object.decode_image()
 
 if output_message == secret_message:
     print("2.3 Completed")
+else:
+    print("2.3 Failed")
 
 
 ### Test: 2.4 ###
 
 secret_message = "A" * (maximum_chars + 10) #Value greater than max character
 output_image_path = "TestingOutput/2.4.png"
-image_object = DCTSteg(testing_image_path, output_image_path, secret_message,bit_position)
+image_object = DCTSteg(testing_image_path, output_image_path, secret_message,bit_position, channel_choice)
 try:
     image_object.encode_image()
-except ValueError:
+except: # Custom exception "MessageTooLargeError" should be raised
     print("2.4 Completed")
 
 
@@ -146,8 +148,8 @@ except ValueError:
 try:
     for i in range(0,8): #Bit
         secret_message = "Hello World"
-        output_image_path = f"TestingOutput/2.5.1_bit_position{i+1}.png"
-        image_object = DCTSteg(testing_image_path, output_image_path, secret_message, i)
+        output_image_path = f"TestingOutput/2.5.1_bit_position-{i+1}.png"
+        image_object = DCTSteg(testing_image_path, output_image_path, secret_message, i, channel_choice)
         image_object.encode_image()
     print("2.5.1 Completed")
 
@@ -156,11 +158,12 @@ except:
 
 
 ### Test: 2.5.2 ###
+channels = ['r','g','b']
 try:
-    for i in range(0,8): #Bit
+    for i in channels: #Bit
         secret_message = "Hello World"
-        output_image_path = f"TestingOutput/2.5_channel_{i+1}.png"
-        image_object = DCTSteg(testing_image_path, output_image_path, secret_message, i)
+        output_image_path = f"TestingOutput/2.5_channel-{i}.png"
+        image_object = DCTSteg(testing_image_path, output_image_path, secret_message, bit_position, i)
         image_object.encode_image()
     print("2.5.2 Completed")
 
