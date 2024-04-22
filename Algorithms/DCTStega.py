@@ -18,7 +18,7 @@ quantisation_table = np.array(
             40,
             51,
             61,
-        ],  # Luminance (Y) Quantization Table (Standard Quality)
+        ],  #The most common quantization table is based on the Independent JPEG Group (IJG) standard. This table is often referred to as the base quantization matrix (Tb).
         [12, 12, 14, 19, 26, 58, 60, 55],
         [14, 13, 16, 24, 40, 57, 69, 56],
         [14, 17, 22, 29, 51, 87, 80, 62],
@@ -45,7 +45,7 @@ class DCTSteg(SteganographyAlgorithm):
 
     def dct(self, image_block):
         M, N = len(image_block), len(image_block[0])
-        dct_block = [[0.0] * N for _ in range(M)]
+        dct_block = [[0.0] * N for i in range(M)]
 
         for u in range(M):
             for v in range(N):
@@ -67,7 +67,7 @@ class DCTSteg(SteganographyAlgorithm):
 
     def idct(self, dct_block):
         M, N = len(dct_block), len(dct_block[0])
-        image_block = [[0.0] * N for _ in range(M)]
+        image_block = [[0.0] * N for i in range(M)]
 
         for x in range(M):
             for y in range(N):
