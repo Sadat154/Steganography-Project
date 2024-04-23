@@ -30,7 +30,7 @@ def generate_bitsub_images(base_filepath, image_names):
 
     Bit_Images_List = []
     for img in image_names:
-        current_image_path = f"{base_filepath}/OriginalImages/{img[0]}.{img[1]}"
+        current_image_path = f"{base_filepath}/DefaultImages/{img[0]}.{img[1]}"
         current_image = Image.open(current_image_path)
 
         for bit_position in range(0, 8):  # Bit
@@ -65,7 +65,7 @@ def generate_dct_images(base_filepath, images_list):
     DCT_Images_List = []
 
     for images in images_list:
-        current_image_path = f"{base_filepath}/OriginalImages/{images[0]}.{images[1]}"
+        current_image_path = f"{base_filepath}/DefaultImages/{images[0]}.{images[1]}"
         current_image = Image.open(current_image_path)
         width, height = current_image.size[0], current_image.size[1]
         max_chars = (width / 8) * (height / 8)
@@ -230,21 +230,20 @@ if __name__ == "__main__":
     base_filepath = obtain_filepath()
 
     # image_names = [['Colourful','jpg'],['SimilarColours','jpg'],['GreyScale','webp']] #Can be changed by the user
-    image_names = os.listdir(f"{base_filepath}/OriginalImages")
-    image_names = [i.split('.') for i in image_names]
+    default_image_names = os.listdir(f"{base_filepath}/DefaultImages")
+    default_image_names = [i.split('.') for i in default_image_names]
 
-    print(len(image_names))
-    # Need to implement it so the user can decide what algorithms a html file will be generated for
+    user_image_names = os.listdir(f"{base_filepath}/UserImages")
+    user_image_names = [i.split('.') for i in user_image_names]
 
-    get_user_choice =-1
+    get_user_choice_alg =-1
+    get_user_choice_img = -1
 
-    print("**NOTE** Please ensure you have placed the image files you would like to test in the 'OriginalImages' folder **NOTE**")
+    print("**NOTE** If you would like to test your own images, please ensure you place the image files in the 'UserImages' folder **NOTE**")
 
-    if len(image_names) == 0:
-        raise ValueError("Please place the image(s) you would like to test in the 'OriginalImages' folder!")
 
-    while get_user_choice not in range(1, 3+1):
-        get_user_choice = int(input(
+    while get_user_choice_alg not in range(1, 3+1):
+        get_user_choice_alg = int(input(
             """Please Enter which algorithm you would like to test:
         1. Bit Substitution Based Steganography
         2. DCT Based Steganography
@@ -253,22 +252,34 @@ if __name__ == "__main__":
         Option: """
         ))
 
-    create_html_for_images(base_filepath,image_names,3)
+    while get_user_choice_img not in range(1, 3):
+        get_user_choice_img = int(input(
+            """Please Enter what images you would like to test:
+        1. Your Own
+        2. Default Images
+        
+        Option: """
+        ))
 
-    if get_user_choice == 1:
-        generate_bitsub_images(base_filepath, image_names)
-        create_html_for_images(base_filepath, image_names, get_user_choice)
+        if len(user_image_names) == 0 and get_user_choice_img == 1:
+            raise ValueError("Please place the image(s) you would like to test in the 'UserImages' folder and try again!")
 
-    elif get_user_choice == 2:
-        generate_dct_images(base_filepath, image_names)
-        create_html_for_images(base_filepath, image_names, get_user_choice)
+    create_html_for_images(base_filepath,default_image_names,3)
 
-    elif get_user_choice == 3:  # Regardless of if they input 3 or an invalid input, we will do both
-        generate_dct_images(base_filepath, image_names)
-        generate_bitsub_images(base_filepath, image_names)
-        create_html_for_images(base_filepath, image_names, get_user_choice)
+    if get_user_choice_alg == 1:
+        generate_bitsub_images(base_filepath, default_image_names)
+        create_html_for_images(base_filepath, default_image_names, get_user_choice_alg)
 
+    elif get_user_choice_alg == 2:
+        generate_dct_images(base_filepath, default_image_names)
+        create_html_for_images(base_filepath, default_image_names, get_user_choice_alg)
 
+    elif get_user_choice_alg == 3:
+        generate_dct_images(base_filepath, default_image_names)
+        generate_bitsub_images(base_filepath, default_image_names)
+        create_html_for_images(base_filepath, default_image_names, get_user_choice_alg)
+
+    #Need to implement it to work for option 1, your own images
 
     #IMPORTANT NEED TO ADD THE HOVER THING TO HTML
 
