@@ -13,7 +13,7 @@ def message_to_binary(message):
     return binary_message
 
 
-def obtain_filepath():
+def obtain_base_filepath():
     # Obtain file path of folder which contains all other pieces of code, images etc
     file_path = str(pathlib.Path(__file__).parent.resolve()).replace(
         "\\", "/"
@@ -226,8 +226,8 @@ def create_html_for_images(file_path, image_names, type):
     # print(f"HTML file '{html_filename}' created successfully!")
 
 
-if __name__ == "__main__":
-    base_filepath = obtain_filepath()
+def main():
+    base_filepath = obtain_base_filepath()
 
     # image_names = [['Colourful','jpg'],['SimilarColours','jpg'],['GreyScale','webp']] #Can be changed by the user
     default_image_names = os.listdir(f"{base_filepath}/DefaultImages")
@@ -243,44 +243,52 @@ if __name__ == "__main__":
 
 
     while get_user_choice_alg not in range(1, 3+1):
-        get_user_choice_alg = int(input(
-            """Please Enter which algorithm you would like to test:
-        1. Bit Substitution Based Steganography
-        2. DCT Based Steganography
-        3. Both
-        
-        Option: """
-        ))
+        try:
+            get_user_choice_alg = int(input(
+                """Please Enter which algorithm you would like to test:
+1. Bit Substitution Based Steganography
+2. DCT Based Steganography
+3. Both
+            
+Option: """
+            ))
+        except:
+            print("Please only input integers!")
+            exit()
 
     while get_user_choice_img not in range(1, 3):
-        get_user_choice_img = int(input(
-            """Please Enter what images you would like to test:
-        1. Your Own
-        2. Default Images
-        
-        Option: """
-        ))
+        try:
+            get_user_choice_img = int(input(
+                """Please Enter what images you would like to test:
+1. Your Own
+2. Default Images
+            
+Option: """
+            ))
+        except:
+            print("Please only input integers!")
+            exit()
 
         if len(user_image_names) == 0 and get_user_choice_img == 1:
             raise ValueError("Please place the image(s) you would like to test in the 'UserImages' folder and try again!")
 
-    create_html_for_images(base_filepath,default_image_names,3)
+    image_names = default_image_names if get_user_choice_img == 1 else user_image_names
 
     if get_user_choice_alg == 1:
-        generate_bitsub_images(base_filepath, default_image_names)
-        create_html_for_images(base_filepath, default_image_names, get_user_choice_alg)
+        generate_bitsub_images(base_filepath, image_names)
 
     elif get_user_choice_alg == 2:
-        generate_dct_images(base_filepath, default_image_names)
-        create_html_for_images(base_filepath, default_image_names, get_user_choice_alg)
+        generate_dct_images(base_filepath, image_names)
 
     elif get_user_choice_alg == 3:
-        generate_dct_images(base_filepath, default_image_names)
-        generate_bitsub_images(base_filepath, default_image_names)
-        create_html_for_images(base_filepath, default_image_names, get_user_choice_alg)
+        generate_dct_images(base_filepath, image_names)
+        generate_bitsub_images(base_filepath, image_names)
 
-    #Need to implement it to work for option 1, your own images
-
-    #IMPORTANT NEED TO ADD THE HOVER THING TO HTML
+    create_html_for_images(base_filepath, image_names, get_user_choice_alg)
 
 
+
+
+main()
+
+#IMPORTANT NEED TO ADD THE HOVER THING TO HTML

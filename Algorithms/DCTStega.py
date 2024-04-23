@@ -35,13 +35,15 @@ class DCTSteg(SteganographyAlgorithm):
         super().__init__(original_image_path, output_image_path, secret_message, bit_position,channel)
         self.channels = 3
         self.secret_message = self.secret_message + self.DELIM
-        # self.check_message_length_DCT(
-        #     self.original_image.size[1],
-        #     self.original_image.size[0],
-        #     self.secret_message,
-        # )
         self.binary_message = self.message_to_bin(self.secret_message)
         self.channel_to_modify = channels_dict[channel.lower()]
+        self.convert_modes_dct()
+    def convert_modes_dct(self):
+        if self.mode == "L":
+            self.original_image.convert("RGB").save("TempData/tempfile.png")
+
+        self.original_image = Image.open("TempData/tempfile.png")
+
 
     def dct(self, image_block):
         M, N = len(image_block), len(image_block[0])
@@ -91,6 +93,7 @@ class DCTSteg(SteganographyAlgorithm):
     def encode_image(self):
         self.check_message_length_DCT(self.height,self.width, self.secret_message)
         resized_img, row, column = self.resize_image(self.original_image)
+
         img = np.array(resized_img)
 
         # Hide message in the chosen channel so we need to separate it
@@ -257,5 +260,6 @@ class DCTSteg(SteganographyAlgorithm):
 
 
 
-# X = DCTSteg("TestingImage.jpg", "DCTWORK.png", "BLUDCLART", 4, 'g') # Only works from 4 onwards aka bit 5,6,7,8
-# X.encode_image()
+X = DCTSteg("ActualGreyScale.png", "DCTWORK.png", "BLUDCLART", 4, 'g') # Only works from 4 onwards aka bit 5,6,7,8
+X.encode_image()
+print(X.decode_image())
