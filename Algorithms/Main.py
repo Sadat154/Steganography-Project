@@ -26,11 +26,11 @@ def obtain_base_filepath():
     return file_path
 
 
-def generate_bitsub_images(base_filepath, image_names):
+def generate_bitsub_images(base_filepath, image_names, imgtype):
 
     Bit_Images_List = []
     for img in image_names:
-        current_image_path = f"{base_filepath}/DefaultImages/{img[0]}.{img[1]}"
+        current_image_path = f"{base_filepath}/DefaultImages/{img[0]}.{img[1]}" if imgtype == 2 else f"{base_filepath}/UserImages/{img[0]}.{img[1]}"
         current_image = Image.open(current_image_path)
 
         for bit_position in range(0, 8):  # Bit
@@ -63,12 +63,12 @@ def generate_bitsub_images(base_filepath, image_names):
     return Bit_Images_List  # So we have a way to access all the image objects
 
 
-def generate_dct_images(base_filepath, images_list):
+def generate_dct_images(base_filepath, images_list, imgtype):
     colour_channels = ["red", "green", "blue"]
     DCT_Images_List = []
 
     for images in images_list:
-        current_image_path = f"{base_filepath}/DefaultImages/{images[0]}.{images[1]}"
+        current_image_path = f"{base_filepath}/DefaultImages/{images[0]}.{images[1]}" if imgtype == 2 else f"{base_filepath}/UserImages/{images[0]}.{images[1]}"
         current_image = Image.open(current_image_path)
         width, height = current_image.size[0], current_image.size[1]
         max_chars = (width / 8) * (height / 8)
@@ -232,6 +232,41 @@ def create_html_for_images(base_path, image_names, type):
 
     # print(f"HTML file '{html_filename}' created successfully!")
 
+def image_bit_depth_check(base_path, user_img):
+    mode_to_bpp = {
+        '1': 1,  # 1-bit (black and white)
+        'L': 8,  # 8-bit (grayscale)
+        'P': 8,  # 8-bit (palette-based)
+        'RGB': 24,  # 24-bit (true color)
+        'RGBA': 32,  # 32-bit (true color with alpha)
+        'CMYK': 32,  # 32-bit (CMYK color)
+        'YCbCr': 24,  # 24-bit (YCbCr color)
+        'I': 32,  # 32-bit (integer pixels)
+        'F': 32  # 32-bit (floating-point pixels)
+    }
+
+
+    for image in user_img:
+        current_image = '.'.join(image)
+        current_image_path = f"{base_path}/UserImages/{current_image}"
+
+        open_img = Image.open(current_image_path)
+        if mode_to_bpp[open_img.mode] > 24:
+            print(f"Image: {image[0]} has an invalid bit depth!")
+            exit()
+
+def image_format_check(base_path, user_img):
+    accepted_formats = ['jpg', 'jpeg', 'png', 'bmp', 'svg', "webp"]
+
+
+    for image in user_img:
+        current_image = '.'.join(image)
+        current_image_path = f"{base_path}/UserImages/{current_image}"
+
+        open_img = Image.open(current_image_path)
+        if (open_img.format).lower() not in accepted_formats:
+            print(f"Image: {image[0]} has an invalid format! Please choose an image with an extension of {accepted_formats}")
+            exit()
 
 def main():
     base_filepath = obtain_base_filepath()
@@ -245,10 +280,7 @@ def main():
 
 
 
-    #generate_bitsub_images(base_filepath, default_image_names)
-    generate_dct_images(base_filepath, default_image_names)
-    create_html_for_images(base_filepath, default_image_names, 2)
-    exit()
+
 
     get_user_choice_alg =-1
     get_user_choice_img = -1
@@ -285,18 +317,21 @@ Option: """
 
         if len(user_image_names) == 0 and get_user_choice_img == 1:
             raise ValueError("Please place the image(s) you would like to test in the 'UserImages' folder and try again!")
+    if get_user_choice_img == 1:
+        image_bit_depth_check(base_filepath, user_image_names)
+        image_format_check(base_filepath, user_image_names)
 
     image_names = default_image_names if get_user_choice_img == 2 else user_image_names
 
     if get_user_choice_alg == 1:
-        generate_bitsub_images(base_filepath, image_names)
+        generate_bitsub_images(base_filepath, image_names, get_user_choice_img)
 
     elif get_user_choice_alg == 2:
-        generate_dct_images(base_filepath, image_names)
+        generate_dct_images(base_filepath, image_names, get_user_choice_img)
 
     elif get_user_choice_alg == 3:
-        generate_dct_images(base_filepath, image_names)
-        generate_bitsub_images(base_filepath, image_names)
+        generate_dct_images(base_filepath, image_names, get_user_choice_img)
+        generate_bitsub_images(base_filepath, image_names, get_user_choice_img)
 
     create_html_for_images(base_filepath, image_names, get_user_choice_alg)
 
