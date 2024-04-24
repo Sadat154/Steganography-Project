@@ -72,7 +72,7 @@ class SteganographyAlgorithm:
 
     def resize_image(self, img):
         #height, width = self.height, self.width
-        height, width = img.size
+        width, height = img.size
         new_height = height + (8 - (height % 8)) if height % 8 != 0 else height
         new_width = width + (8 - (width % 8)) if width % 8 != 0 else width
 

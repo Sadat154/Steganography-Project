@@ -42,7 +42,7 @@ class DCTSteg(SteganographyAlgorithm):
         if self.mode == "L":
             self.original_image.convert("RGB").save("TempData/tempfile.png")
 
-        self.original_image = Image.open("TempData/tempfile.png")
+            self.original_image = Image.open("TempData/tempfile.png")
 
 
     def dct(self, image_block):
@@ -207,6 +207,7 @@ class DCTSteg(SteganographyAlgorithm):
         final_img = Image.merge("RGB", (red_img, green_img, blue_img))
         final_img.save(self.encoded_image_path)
 
+
     def decode_image(self):
         img = Image.open(self.encoded_image_path)
         resized_img, row, column = self.resize_image(self.original_image) # Here resized_img is never used
@@ -260,6 +261,3 @@ class DCTSteg(SteganographyAlgorithm):
 
 
 
-X = DCTSteg("ActualGreyScale.png", "DCTWORK.png", "BLUDCLART", 4, 'g') # Only works from 4 onwards aka bit 5,6,7,8
-X.encode_image()
-print(X.decode_image())

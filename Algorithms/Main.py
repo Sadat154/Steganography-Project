@@ -37,6 +37,9 @@ def generate_bitsub_images(base_filepath, image_names):
             # Need to obtain maximum amount of characters available to be embedded into the image
             max_chars = 3 * current_image.size[0] * current_image.size[1]
 
+            if current_image.mode == "L":
+                max_chars = current_image.size[0] * current_image.size[1]
+
             # For each bit, 4 images need to be produced
             for j in range(1, 5):
                 percentage = j / 4
@@ -46,7 +49,7 @@ def generate_bitsub_images(base_filepath, image_names):
                 chars_to_be_embedded = chars_to_be_embedded[
                     : -(len(DELIM)+1)
                 ]  # We need to account for the delimiter that will be added
-                output_image_path = f"{base_filepath}/ModifiedImages/BitSubModifiedImages/{j}_{img[0]}[{bit_position+1}]_{j/4*100}%.png"
+                output_image_path = f"{base_filepath}/ModifiedImages/BitSubModifiedImages/{j}_{img[0]}[{bit_position+1}]_{j/4*100}%-a{len(chars_to_be_embedded)}.png"
                 ImageObj = BitSub.BitSubEncoderDecoder(
                     pathlib.Path(current_image_path),
                     pathlib.Path(output_image_path),
@@ -81,7 +84,7 @@ def generate_dct_images(base_filepath, images_list):
                     chars_to_be_embedded = chars_to_be_embedded[
                         : -len(DELIM)
                     ]  # We need to account for the delimiter that will be added
-                    output_image_path = f"{base_filepath}/ModifiedImages/DCTModifiedImages/{j}_{images[0]}[{bit_position+1}]_{j/4*100}%_{channel_choice}.png"
+                    output_image_path = f"{base_filepath}/ModifiedImages/DCTModifiedImages/{j}_{images[0]}[{bit_position+1}]_{j/4*100}%_{channel_choice}-a{len(chars_to_be_embedded)}.png"
                     ImageObj = DCT.DCTSteg(
                         pathlib.Path(current_image_path),
                         pathlib.Path(output_image_path),
@@ -94,8 +97,7 @@ def generate_dct_images(base_filepath, images_list):
                     DCT_Images_List.append(ImageObj)
     return DCT_Images_List
 
-
-def create_html_for_images(file_path, image_names, type):
+def create_html_for_images(base_path, image_names, type):
     images_per_row = 4  # This is a fixed value as we have generated images in which 25%,50%,75%,100% of the image has been modified
     rows_bitsub = (
         len(image_names) * 8
@@ -105,7 +107,7 @@ def create_html_for_images(file_path, image_names, type):
         rows_bitsub + rows_dct
     )  # This equates to the number of images in the modifiedimagesfile / 4 as for each type of modification we have generated 4 images
 
-    BitSubFilePath = f"{file_path}/ModifiedImages/BitSubModifiedImages"
+    BitSubFilePath = f"{base_path}/ModifiedImages/BitSubModifiedImages"
     all_bitsub_images = os.listdir(BitSubFilePath)
     with open("Index.html", "w") as f:
         # Write the HTML header
@@ -138,20 +140,24 @@ def create_html_for_images(file_path, image_names, type):
                 # Find Bit Position
                 CurrentRow = all_bitsub_images[
                     i::rows_bitsub
-                ]  # In a given row, the bit position will be same for all the images
+                ]  # In a given row, the bit position will be same for all the images as the same image will be in a given row
                 # square_bracket = CurrentRow[0].find('[') # Using first image, could use any, using [ to find bit pos
                 bit_position = CurrentRow[0][1 + CurrentRow[0].find("[")]
+
+
+
 
                 f.write(f"<h3>Bit Substitution: Bit Position {bit_position}</h3>")
                 f.write('<div class="row">')
 
                 # Display images in each row
                 for j in range(1, images_per_row + 1):
+                    num_of_text_hidden = CurrentRow[j-1][CurrentRow[j-1].find("-a") + 2:CurrentRow[j-1].rfind('.')]
                     f.write(
                         f"""
                     <div class="column">
                         <div class="image-container">
-                            <img src="/{BitSubFilePath}/{all_bitsub_images[i::rows_bitsub][j-1]}" width="100%;">
+                            <img src="/{BitSubFilePath}/{all_bitsub_images[i::rows_bitsub][j-1]}" title="'a'*{num_of_text_hidden}"  width="100%;">
                             <div class="text">{(j/4)*100}%</div>
                         </div>
                     </div>
@@ -175,7 +181,7 @@ def create_html_for_images(file_path, image_names, type):
                     <br><br>
                 """
             )
-            DCTFilePath = f"{file_path}/ModifiedImages/DCTModifiedImages"
+            DCTFilePath = f"{base_path}/ModifiedImages/DCTModifiedImages"
             all_dct_images = os.listdir(DCTFilePath)
 
             for i in range(rows_dct):
@@ -185,7 +191,7 @@ def create_html_for_images(file_path, image_names, type):
                 ]  # In a given row, the bit position will be same for all the images
                 bit_position = CurrentRow[0][1 + CurrentRow[0].find("[")]
                 channel = CurrentRow[0][
-                    CurrentRow[0].rfind("_") + 1 : CurrentRow[0].rfind(".")
+                    CurrentRow[0].rfind("%_") + 2 : CurrentRow[0].rfind("-a")
                 ]  # the channel name will be from the last '_' to the '.'
 
                 f.write(
@@ -195,11 +201,12 @@ def create_html_for_images(file_path, image_names, type):
 
                 # Display images in each row
                 for j in range(1, images_per_row + 1):
+                    num_of_text_hidden = CurrentRow[j-1][CurrentRow[j-1].find("-a") + 2:CurrentRow[j-1].rfind('.')]
                     f.write(
                         f"""
                     <div class="column">
                         <div class="image-container">
-                            <img src="/{DCTFilePath}/{all_dct_images[i::rows_dct][j-1]}" width="100%;">
+                            <img src="/{DCTFilePath}/{all_dct_images[i::rows_dct][j-1]}" title="'a'*{num_of_text_hidden}" width="100%;">
                             <div class="text">{(j/4)*100}%</div>
                         </div>
                     </div>
@@ -235,6 +242,13 @@ def main():
 
     user_image_names = os.listdir(f"{base_filepath}/UserImages")
     user_image_names = [i.split('.') for i in user_image_names]
+
+
+
+    #generate_bitsub_images(base_filepath, default_image_names)
+    generate_dct_images(base_filepath, default_image_names)
+    create_html_for_images(base_filepath, default_image_names, 2)
+    exit()
 
     get_user_choice_alg =-1
     get_user_choice_img = -1
@@ -272,7 +286,7 @@ Option: """
         if len(user_image_names) == 0 and get_user_choice_img == 1:
             raise ValueError("Please place the image(s) you would like to test in the 'UserImages' folder and try again!")
 
-    image_names = default_image_names if get_user_choice_img == 1 else user_image_names
+    image_names = default_image_names if get_user_choice_img == 2 else user_image_names
 
     if get_user_choice_alg == 1:
         generate_bitsub_images(base_filepath, image_names)
