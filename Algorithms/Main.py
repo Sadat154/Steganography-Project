@@ -268,6 +268,10 @@ def image_format_check(base_path, user_img):
             print(f"Image: {image[0]} has an invalid format! Please choose an image with an extension of {accepted_formats}")
             exit()
 
+def clear_modified_folders(base_path):
+    dct_folder = [f.unlink() for f in pathlib.Path(f"{base_path}/ModifiedImages/DCTModifiedImages").glob("*") if f.is_file()]
+    bitsub_folder = [f.unlink() for f in pathlib.Path(f"{base_path}/ModifiedImages/BitSubModifiedImages").glob("*") if f.is_file()]
+
 def main():
     base_filepath = obtain_base_filepath()
 
@@ -279,6 +283,7 @@ def main():
     user_image_names = [i.split('.') for i in user_image_names]
 
 
+    clear_modified_folders(base_filepath)
 
 
 
@@ -300,7 +305,7 @@ Option: """
             ))
         except:
             print("Please only input integers!")
-            exit()
+
 
     while get_user_choice_img not in range(1, 3):
         try:
@@ -313,7 +318,7 @@ Option: """
             ))
         except:
             print("Please only input integers!")
-            exit()
+
 
         if len(user_image_names) == 0 and get_user_choice_img == 1:
             raise ValueError("Please place the image(s) you would like to test in the 'UserImages' folder and try again!")

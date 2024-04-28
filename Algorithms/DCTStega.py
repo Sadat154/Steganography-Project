@@ -206,7 +206,7 @@ class DCTSteg(SteganographyAlgorithm):
 
         final_img = Image.merge("RGB", (red_img, green_img, blue_img))
         final_img.save(self.encoded_image_path)
-
+        self.original_image.close()
 
     def decode_image(self):
         img = Image.open(self.encoded_image_path)
@@ -260,4 +260,6 @@ class DCTSteg(SteganographyAlgorithm):
                     return finalMsg[: -(len(self.DELIM))]
 
 
-
+# og = "C:/Users/Nafis/Desktop/Python_projects/Steganography-Project/DefaultImages/GreyScalePNG.png"
+# X = DCTSteg(og,"test.png", "Hi", 2, "r")
+# X.encode_image()
