@@ -20,6 +20,7 @@ class SteganographyAlgorithm:
             self.original_image = self.open_image(original_image_path)
             self.height = self.original_image.size[1]
             self.width = self.original_image.size[0]
+            self.mode = self.original_image.mode
         self.encoded_image_path = encoded_image_path
         self.secret_message = secret_message
         self.bit_position = bit_position
@@ -71,7 +72,7 @@ class SteganographyAlgorithm:
 
     def resize_image(self, img):
         #height, width = self.height, self.width
-        height, width = img.size
+        width, height = img.size
         new_height = height + (8 - (height % 8)) if height % 8 != 0 else height
         new_width = width + (8 - (width % 8)) if width % 8 != 0 else width
 

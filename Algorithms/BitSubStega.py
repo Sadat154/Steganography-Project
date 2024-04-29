@@ -18,43 +18,61 @@ class BitSubEncoderDecoder(SteganographyAlgorithm):
             self.secret_message + self.DELIM
         )  # Delimiter to indicate end of message
         binary_message = self.message_to_bin(secret_message)
-        if (
-            len(binary_message)
-            > self.channels * original_image.size[0] * original_image.size[1]
-        ):
-            # print(len(binary_message))
-            # print(self.channels * original_image.size[0] * original_image.size[1])
-            raise ValueError("Message is too long to be encoded in the image")
-        # else:
-        #     print(len(binary_message))
-        #     print(self.channels * original_image.size[0] * original_image.size[1])
+        if self.mode != "L":
+            if (
+                len(binary_message)
+                > self.channels * original_image.size[0] * original_image.size[1]
+            ):
 
-        data_index = 0
-        for y in range(original_image.size[1]):
-            for x in range(original_image.size[0]):
-                pixel = list(original_image.getpixel((x, y)))
-                pixellist_to_binary = [self.decimal_to_binary(i) for i in pixel]
+                raise ValueError("Message is too long to be encoded in the image")
 
-                for i in range(self.channels):
-                    if data_index < len(binary_message):
 
-                        pixel_binary = list(
-                            [j for j in pixellist_to_binary[i]]
-                        )  # Split the pixel into its binary letters
+            data_index = 0
+            for y in range(original_image.size[1]):
+                for x in range(original_image.size[0]):
+                    pixel = list(original_image.getpixel((x, y)))
+                    pixellist_to_binary = [self.decimal_to_binary(i) for i in pixel]
 
-                        pixel_binary[self.bit_position] = binary_message[data_index]
-                        # Need to convert value to decimal now
+                    for i in range(self.channels):
+                        if data_index < len(binary_message):
 
-                        pixel_binary = self.binary_to_decimal("".join(pixel_binary))
-                        # Finally need to adjust the decimal value stored in pixel
-                        pixel[i] = pixel_binary
-                        # pixel[i] = pixel[i] & ~(1 << self.bit_position) | (int(binary_message[data_index]) << self.bit_position)
-                        # print(test[i])
-                        data_index += 1
+                            pixel_binary = list(
+                                [j for j in pixellist_to_binary[i]]
+                            )  # Split the pixel into its binary letters
 
-                original_image.putpixel((x, y), tuple(pixel))
+                            pixel_binary[self.bit_position] = binary_message[data_index]
+                            # Need to convert value to decimal now
 
-        original_image.save(self.encoded_image_path)
+                            pixel_binary = self.binary_to_decimal("".join(pixel_binary))
+                            # Finally need to adjust the decimal value stored in pixel
+                            pixel[i] = pixel_binary
+                            # pixel[i] = pixel[i] & ~(1 << self.bit_position) | (int(binary_message[data_index]) << self.bit_position)
+
+                            data_index += 1
+
+                    original_image.putpixel((x, y), tuple(pixel))
+            original_image.save(self.encoded_image_path)
+        else:
+            if (
+                len(binary_message)
+                > original_image.size[0] * original_image.size[1]
+            ):
+                raise ValueError("Message is too long to be encoded in the greyscale image")
+
+            pixels = list(self.original_image.getdata())
+            # Encode the secret message into the specified bit of each pixel
+            encoded_pixels = []
+            for pixel, bit in zip(pixels, binary_message):
+                # Clear the specified bit and set it to the secret message bit
+                new_pixel = (pixel & ~(1 << (7 - self.bit_position))) | (int(bit) << (7 - self.bit_position))
+                encoded_pixels.append(new_pixel)
+            encoded_pixels = encoded_pixels + pixels[len(binary_message):]
+            # Create a new image with the encoded pixel data
+            encoded_image = Image.new("L", self.original_image.size)
+            encoded_image.putdata(encoded_pixels)
+            encoded_image.save(self.encoded_image_path)
+
+
 
 
     def decode_image(self):
@@ -63,63 +81,53 @@ class BitSubEncoderDecoder(SteganographyAlgorithm):
         binary_message = ""
         message_length = 0
         decoded_message = ""
+        if self.mode != "L":
+            while decoded_message[-(len(self.DELIM)) :] != self.DELIM:
+                for y in range(encoded_image.size[1]):
+                    for x in range(encoded_image.size[0]):
+                        pixel = list(encoded_image.getpixel((x, y)))
 
-        while decoded_message[-(len(self.DELIM)) :] != self.DELIM:
-            for y in range(encoded_image.size[1]):
-                for x in range(encoded_image.size[0]):
-                    pixel = list(encoded_image.getpixel((x, y)))
+                        for i in range(3):
+                            binary_message += str(
+                                (self.decimal_to_binary(pixel[i]))[self.bit_position]
+                            )
 
-                    for i in range(3):
-                        binary_message += str(
-                            (self.decimal_to_binary(pixel[i]))[self.bit_position]
-                        )
+                            decoded_message = "".join(
+                                [
+                                    chr(int(binary_message[i : i + 8], 2))
+                                    for i in range(0, len(binary_message), 8)
+                                ]
+                            )
+                            message_length += 1
+                            if self.DELIM in decoded_message:
+                                break
 
-                        decoded_message = "".join(
-                            [
-                                chr(int(binary_message[i : i + 8], 2))
-                                for i in range(0, len(binary_message), 8)
-                            ]
-                        )
-                        message_length += 1
                         if self.DELIM in decoded_message:
                             break
 
                     if self.DELIM in decoded_message:
                         break
 
-                if DELIM in decoded_message:
+                if self.DELIM in decoded_message:
                     break
 
-            if DELIM in decoded_message:
-                break
+        else:
+            pixels = encoded_image.getdata()
 
-            remaining_bits = message_length % 8
-            if remaining_bits != 0:
-                binary_message = binary_message[:-remaining_bits]
+            for pixel in pixels:
+                bin_val = self.decimal_to_binary(pixel)
+                binary_message += bin_val[self.bit_position]
+
+                decoded_message = "".join(
+                    [
+                        chr(int(binary_message[i: i + 8], 2))
+                        for i in range(0, len(binary_message), 8)
+                    ]
+                )
+                message_length += 1
+                if self.DELIM in decoded_message:
+                    break
+
 
         return decoded_message[: -(len(DELIM))]
 
-
-#
-# def generate_bitsub_images(original_image_path):
-#     Images = []
-#     original_image = Image.open(original_image_path)
-#     for i in range(0,8): #Bit
-#         #Need to obtain maximum amount of characters available to be embedded into the image
-#         max_chars = 3 * original_image.size[0] * original_image.size[1]
-#
-#         #For each bit, 4 images need to be produced
-#         for j in range(1,5):
-#             percentage = j/4
-#             chars_to_be_embedded = 'a' * math.trunc((((percentage * max_chars)) / 8)-len(Delim)) # We divide by 8 to account for the binary
-#             output_image_path = f'C:/Users/naf15/OneDrive/Desktop/Python_Projects/Steganography-Project/BitSubResults/BitSub_bitpos[{8-(i)}]_{j/4*100}%.png'
-#             ImageObj = BitEncoderDecoder(original_image_path,output_image_path,i)
-#             ImageObj.encode_bit((chars_to_be_embedded))
-#             Images.append(ImageObj)
-#
-# generate_bitsub_images(original_image_path)
-# Need to use decode_bit to test that the code works properly
-# 25%,50%,75%,100% - bit 1-8 so 4*8 = 32 images for one image. Ideal 3 images.
-
-
-# REMINDER THE WAY MY CODE WORKS IF BIT POSITION = 0 THEN MSB IF =7 THEN LSB Fixed the issue GG
