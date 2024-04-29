@@ -366,5 +366,6 @@ Option: """
 
     create_html_for_images(base_filepath, image_names, get_user_choice_alg)
 
+    print("Execution Completed!")
 
 main()
