@@ -1,0 +1,34 @@
+Step 1. Installing python
+
+If you are on windows 10, refer to the following video:
+https://www.youtube.com/watch?v=nU2Egc3Zx3Q&pp=ygUaaG93IHRvIGluc3RhbGwgcHl0aG9uIDMuMTI%3D
+
+If you are on windows 11, refer to the following video:
+https://www.youtube.com/watch?v=gTcKMLznTcI&pp=ygUaaG93IHRvIGluc3RhbGwgcHl0aG9uIDMuMTI%3D
+
+
+Step 2. Installing the project
+
+https://github.com/Sadat154/Steganography-Project
+
+On the right hand side, above the number of commits there is a green box. Click this green box and at the bottom it should say "Download ZIP". 
+
+Press this button and wait for the download to finish.
+
+
+Step 3. Extraction
+
+Go into your downloads folder and extract the ZIP file you just installed into another folder.
+
+Step 4. Carrying out your own tests
+
+Open the folder that you have just extracted the ZIP file into.
+In this folder there will be 3 files relevant to you; "Algorithms", "UserImages" and "ModifiedImages".
+
+If you want to test your own images, you need to place these images in "UserImages". The program will tell you if the testing can be carried out on the images you have chosen.
+
+You then need to open the "Algorithms" folder. Here you will see a file called "Main.py". Right click this file and select "Open with Python" {The option may be slightly differen to this but it will be along those lines}
+
+You may now run the "Main.py" file from the python IDE and follow the steps on the screen. Once you see the code has finished executing, you can refer back to the Algorithms folder where you will then see a document named "Index.html". Open this file using your chosen web browser and the results will then be displayed on your screen.
+
+You may also go to the "ModifiedImages" folder yourself and view the images separately.
