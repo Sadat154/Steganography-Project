@@ -112,13 +112,14 @@ class DCTSteg(SteganographyAlgorithm):
         # print(x)
         # Run the 8x8 blocks through the DCT function
         dct_blocks = [np.round(cv2.dct(image_block)) for image_block in image_blocks]
-        #print(dct_blocks)
+        # print(dct_blocks)
         # Run the 8x8 blocks through the quantisation table
         quantised_blocks = [
             np.round(dct_block / quantisation_table) for dct_block in dct_blocks
         ]
-        #print(quantised_blocks)
-        # Encoding a bit in the chosen bit
+
+
+        # Encoding a bit in the chosen bit position
         message_index = 0
         for quantised_block in quantised_blocks:  # Iterate through the blocks
             DC_coeff = quantised_block[0][0]
