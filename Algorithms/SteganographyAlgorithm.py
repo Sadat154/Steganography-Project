@@ -1,7 +1,7 @@
 from pathlib import Path
 from PIL import Image
 
-
+# Custom exception for when the message is too large to encode in the image
 class MessageTooLargeError(Exception):
     pass
 
@@ -39,7 +39,7 @@ class SteganographyAlgorithm:
         binary_message = "".join(format(ord(char), "08b") for char in message)
         return binary_message
 
-    def decimal_to_binary(self, decimal_value): #Only for positive decimal values
+    def decimal_to_binary(self, decimal_value):  # Only for positive decimal values
         if decimal_value < 0:
             raise ValueError()
         # Convert decimal to binary string
@@ -53,6 +53,7 @@ class SteganographyAlgorithm:
         decimal_value = int(binary_string, 2)
         return decimal_value
 
+    # Method to check if the message can fit in the image using DCT based steganography
     def check_message_length_DCT(self, height, width, message):
         total = (width / 8) * (height / 8)
         length = len(message)
@@ -70,8 +71,9 @@ class SteganographyAlgorithm:
         for i in range(0, len(currentlist), m):
             yield currentlist[i : i + m]
 
+    # Method to resize an image to a multiple of 8
     def resize_image(self, img):
-        #height, width = self.height, self.width
+        # height, width = self.height, self.width
         width, height = img.size
         new_height = height + (8 - (height % 8)) if height % 8 != 0 else height
         new_width = width + (8 - (width % 8)) if width % 8 != 0 else width
@@ -80,7 +82,8 @@ class SteganographyAlgorithm:
         resized_image = img.resize((new_width, new_height))
         return resized_image, new_height, new_width
 
-    # https://www.youtube.com/watch?v=o3En6vAO7OY&list=PLH42YHDxfBrKnEd3n6JGdWScU01a6FCyI&index=6
+
+    # Adjusts bitmask for encoding using DCT
     def adjust_bitmask(self, bitpos):
         if bitpos < 0:
             raise ValueError()
@@ -100,4 +103,3 @@ class SteganographyAlgorithm:
 
     def decode_image(self):
         pass
-

@@ -30,7 +30,11 @@ def generate_bitsub_images(base_filepath, image_names, imgtype):
 
     Bit_Images_List = []
     for img in image_names:
-        current_image_path = f"{base_filepath}/DefaultImages/{img[0]}.{img[1]}" if imgtype == 2 else f"{base_filepath}/UserImages/{img[0]}.{img[1]}"
+        current_image_path = (
+            f"{base_filepath}/DefaultImages/{img[0]}.{img[1]}"
+            if imgtype == 2
+            else f"{base_filepath}/UserImages/{img[0]}.{img[1]}"
+        )
         current_image = Image.open(current_image_path)
 
         for bit_position in range(0, 8):  # Bit
@@ -47,7 +51,7 @@ def generate_bitsub_images(base_filepath, image_names, imgtype):
                     (((percentage * max_chars)) / 8)
                 )  # We divide by 8 to account for the binary
                 chars_to_be_embedded = chars_to_be_embedded[
-                    : -(len(DELIM)+1)
+                    : -(len(DELIM) + 1)
                 ]  # We need to account for the delimiter that will be added
                 output_image_path = f"{base_filepath}/ModifiedImages/BitSubModifiedImages/{j}_{img[0]}[{bit_position+1}]_{j/4*100}%-a{len(chars_to_be_embedded)}.png"
                 ImageObj = BitSub.BitSubEncoderDecoder(
@@ -68,11 +72,14 @@ def generate_dct_images(base_filepath, images_list, imgtype):
     DCT_Images_List = []
 
     for images in images_list:
-        current_image_path = f"{base_filepath}/DefaultImages/{images[0]}.{images[1]}" if imgtype == 2 else f"{base_filepath}/UserImages/{images[0]}.{images[1]}"
+        current_image_path = (
+            f"{base_filepath}/DefaultImages/{images[0]}.{images[1]}"
+            if imgtype == 2
+            else f"{base_filepath}/UserImages/{images[0]}.{images[1]}"
+        )
         current_image = Image.open(current_image_path)
         width, height = current_image.size[0], current_image.size[1]
         max_chars = (width / 8) * (height / 8)
-
 
         for channel_choice in colour_channels:
             for bit_position in range(0, 8):
@@ -97,6 +104,7 @@ def generate_dct_images(base_filepath, images_list, imgtype):
                     DCT_Images_List.append(ImageObj)
     return DCT_Images_List
 
+
 def create_html_for_images(base_path, image_names, type):
     images_per_row = 4  # This is a fixed value as we have generated images in which 25%,50%,75%,100% of the image has been modified
     rows_bitsub = (
@@ -120,9 +128,11 @@ def create_html_for_images(base_path, image_names, type):
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <title>Steganography Project Results</title>
         </head>
-        """)
+        """
+        )
         if type == 1 or type == 3:
-            f.write("""
+            f.write(
+                """
             <body>
     
                 <h2>Bit Substitution Results</h2>
@@ -144,15 +154,14 @@ def create_html_for_images(base_path, image_names, type):
                 # square_bracket = CurrentRow[0].find('[') # Using first image, could use any, using [ to find bit pos
                 bit_position = CurrentRow[0][1 + CurrentRow[0].find("[")]
 
-
-
-
                 f.write(f"<h3>Bit Substitution: Bit Position {bit_position}</h3>")
                 f.write('<div class="row">')
 
                 # Display images in each row
                 for j in range(1, images_per_row + 1):
-                    num_of_text_hidden = CurrentRow[j-1][CurrentRow[j-1].find("-a") + 2:CurrentRow[j-1].rfind('.')]
+                    num_of_text_hidden = CurrentRow[j - 1][
+                        CurrentRow[j - 1].find("-a") + 2 : CurrentRow[j - 1].rfind(".")
+                    ]
                     f.write(
                         f"""
                     <div class="column">
@@ -201,7 +210,9 @@ def create_html_for_images(base_path, image_names, type):
 
                 # Display images in each row
                 for j in range(1, images_per_row + 1):
-                    num_of_text_hidden = CurrentRow[j-1][CurrentRow[j-1].find("-a") + 2:CurrentRow[j-1].rfind('.')]
+                    num_of_text_hidden = CurrentRow[j - 1][
+                        CurrentRow[j - 1].find("-a") + 2 : CurrentRow[j - 1].rfind(".")
+                    ]
                     f.write(
                         f"""
                     <div class="column">
@@ -232,22 +243,22 @@ def create_html_for_images(base_path, image_names, type):
 
     # print(f"HTML file '{html_filename}' created successfully!")
 
+
 def image_bit_depth_check(base_path, user_img):
     mode_to_bpp = {
-        '1': 1,  # 1-bit (black and white)
-        'L': 8,  # 8-bit (grayscale)
-        'P': 8,  # 8-bit (palette-based)
-        'RGB': 24,  # 24-bit (true color)
-        'RGBA': 32,  # 32-bit (true color with alpha)
-        'CMYK': 32,  # 32-bit (CMYK color)
-        'YCbCr': 24,  # 24-bit (YCbCr color)
-        'I': 32,  # 32-bit (integer pixels)
-        'F': 32  # 32-bit (floating-point pixels)
+        "1": 1,  # 1-bit (black and white)
+        "L": 8,  # 8-bit (grayscale)
+        "P": 8,  # 8-bit (palette-based)
+        "RGB": 24,  # 24-bit (true color)
+        "RGBA": 32,  # 32-bit (true color with alpha)
+        "CMYK": 32,  # 32-bit (CMYK color)
+        "YCbCr": 24,  # 24-bit (YCbCr color)
+        "I": 32,  # 32-bit (integer pixels)
+        "F": 32,  # 32-bit (floating-point pixels)
     }
 
-
     for image in user_img:
-        current_image = '.'.join(image)
+        current_image = ".".join(image)
         current_image_path = f"{base_path}/UserImages/{current_image}"
 
         open_img = Image.open(current_image_path)
@@ -255,73 +266,88 @@ def image_bit_depth_check(base_path, user_img):
             print(f"Image: {image[0]} has an invalid bit depth!")
             exit()
 
-def image_format_check(base_path, user_img):
-    accepted_formats = ['jpg', 'jpeg', 'png', 'bmp', 'svg', "webp"]
 
+def image_format_check(base_path, user_img):
+    accepted_formats = ["jpg", "jpeg", "png", "bmp", "webp"]
 
     for image in user_img:
-        current_image = '.'.join(image)
+        current_image = ".".join(image)
         current_image_path = f"{base_path}/UserImages/{current_image}"
 
         open_img = Image.open(current_image_path)
         if (open_img.format).lower() not in accepted_formats:
-            print(f"Image: {image[0]} has an invalid format! Please choose an image with an extension of {accepted_formats}")
+            print(
+                f"Image: {image[0]} has an invalid format! Please choose an image with an extension of {accepted_formats}"
+            )
             exit()
 
+
 def clear_modified_folders(base_path):
-    dct_folder = [f.unlink() for f in pathlib.Path(f"{base_path}/ModifiedImages/DCTModifiedImages").glob("*") if f.is_file()]
-    bitsub_folder = [f.unlink() for f in pathlib.Path(f"{base_path}/ModifiedImages/BitSubModifiedImages").glob("*") if f.is_file()]
+    dct_folder = [
+        f.unlink()
+        for f in pathlib.Path(f"{base_path}/ModifiedImages/DCTModifiedImages").glob("*")
+        if f.is_file()
+    ]
+    bitsub_folder = [
+        f.unlink()
+        for f in pathlib.Path(f"{base_path}/ModifiedImages/BitSubModifiedImages").glob(
+            "*"
+        )
+        if f.is_file()
+    ]
+
 
 def main():
     base_filepath = obtain_base_filepath()
 
-    # image_names = [['Colourful','jpg'],['SimilarColours','jpg'],['GreyScale','webp']] #Can be changed by the user
     default_image_names = os.listdir(f"{base_filepath}/DefaultImages")
-    default_image_names = [i.split('.') for i in default_image_names]
+    default_image_names = [i.split(".") for i in default_image_names]
 
     user_image_names = os.listdir(f"{base_filepath}/UserImages")
-    user_image_names = [i.split('.') for i in user_image_names]
-
+    user_image_names = [i.split(".") for i in user_image_names]
 
     clear_modified_folders(base_filepath)
 
-
-
-    get_user_choice_alg =-1
+    get_user_choice_alg = -1
     get_user_choice_img = -1
 
-    print("**NOTE** If you would like to test your own images, please ensure you place the image files in the 'UserImages' folder **NOTE**")
+    print(
+        "**NOTE** If you would like to test your own images, please ensure you place the image files in the 'UserImages' folder **NOTE**"
+    )
 
-
-    while get_user_choice_alg not in range(1, 3+1):
+    while get_user_choice_alg not in range(1, 3 + 1):
         try:
-            get_user_choice_alg = int(input(
-                """Please Enter which algorithm you would like to test:
+            get_user_choice_alg = int(
+                input(
+                    """Please Enter which algorithm you would like to test:
 1. Bit Substitution Based Steganography
 2. DCT Based Steganography
 3. Both
             
 Option: """
-            ))
+                )
+            )
         except:
             print("Please only input integers!")
 
-
     while get_user_choice_img not in range(1, 3):
         try:
-            get_user_choice_img = int(input(
-                """Please Enter what images you would like to test:
+            get_user_choice_img = int(
+                input(
+                    """Please Enter what images you would like to test:
 1. Your Own
 2. Default Images
             
 Option: """
-            ))
+                )
+            )
         except:
             print("Please only input integers!")
 
-
         if len(user_image_names) == 0 and get_user_choice_img == 1:
-            raise ValueError("Please place the image(s) you would like to test in the 'UserImages' folder and try again!")
+            raise ValueError(
+                "Please place the image(s) you would like to test in the 'UserImages' folder and try again!"
+            )
     if get_user_choice_img == 1:
         image_bit_depth_check(base_filepath, user_image_names)
         image_format_check(base_filepath, user_image_names)
@@ -341,8 +367,4 @@ Option: """
     create_html_for_images(base_filepath, image_names, get_user_choice_alg)
 
 
-
-
 main()
-
-#IMPORTANT NEED TO ADD THE HOVER THING TO HTML
