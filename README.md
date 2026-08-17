@@ -294,36 +294,6 @@ BitSubEncoderDecoder      DCTSteg
 
 This reduces duplicated code and makes it easier to extend the project with additional steganography methods.
 
-## Limitations and Future Improvements
-
-The project was created primarily as an educational and experimental system rather than a production security tool.
-
-Possible future improvements include:
-
-* encrypting messages before embedding them
-* pseudorandom placement of message bits
-* measuring image quality using PSNR or SSIM
-* adding a graphical user interface
-* improving performance using further NumPy vectorisation
-* testing additional steganography techniques
-
-## What I Learned
-
-This project required combining several areas of computer science and mathematics, including:
-
-* binary data representation
-* bit manipulation
-* image processing
-* RGB colour representation
-* Discrete Cosine Transforms
-* quantisation
-* object-oriented programming
-* algorithm design
-* testing and validation
-* automated experimental analysis
-
-A particularly valuable part of the project was developing the program beyond a simple encoder and decoder. The final system automatically varies multiple experimental parameters, allowing different steganography techniques to be evaluated and compared systematically.
-
 ## Author
 
 **Sadat Nafis**
